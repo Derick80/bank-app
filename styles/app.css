@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,700;1,300;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Eczar:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Material+Icons');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .form-primary{
+        @apply w-full text-xl font-semibold
+    }
+
+    .form-field-primary{
+ @apply mb-6 w-full resize rounded-xl border-2 border-black p-2 shadow-sm focus:border-slate-700 focus:outline-none focus:ring-1 dark:border-white dark:bg-slate-400;
+    }
+}
