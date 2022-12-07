@@ -5,12 +5,12 @@ import NavBar, { siteLinks } from './nav-bar'
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='flex h-screen flex-col bg-blue-400'>
+    <div className='flex h-screen flex-col bg-slate-200'>
       <NavBar>
         <NavLinks />
       </NavBar>
 
-      <main className='flex h-full flex-row bg-red-300'>{children}</main>
+      <main className='flex h-full flex-row'>{children}</main>
       <Footer />
     </div>
   )

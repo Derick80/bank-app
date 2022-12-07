@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className='bottom-0 flex w-full justify-center space-x-4 bg-yellow-200 pb-2 md:space-x-8'>
+    <footer className='bottom-0 flex w-full justify-center space-x-4 pb-2 md:space-x-8'>
       <div>
         <a
           href='https://www.linkedin.com/in/dhoskinson'

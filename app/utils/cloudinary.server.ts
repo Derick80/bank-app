@@ -1,5 +1,5 @@
 import cloudinary from 'cloudinary'
-import type { UploadHandler } from '@remix-run/node';
+import type { UploadHandler } from '@remix-run/node'
 import { unstable_parseMultipartFormData } from '@remix-run/node'
 import {
   unstable_composeUploadHandlers,

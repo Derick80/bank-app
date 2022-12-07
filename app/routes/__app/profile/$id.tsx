@@ -1,11 +1,12 @@
 import { Profile } from '@prisma/client'
-import type { ActionFunction, LoaderFunction} from '@remix-run/node';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import {
   Form,
   useActionData,
   useFetcher,
-  useLoaderData} from '@remix-run/react'
+  useLoaderData
+} from '@remix-run/react'
 import { useState } from 'react'
 import invariant from 'tiny-invariant'
 import FormField from '~/components/shared/form-field'
@@ -14,10 +15,8 @@ import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { getUserProfile, updateUserProfile } from '~/utils/profile.server'
 import { validateText } from '~/utils/validators.server'
 
-
-export type LoaderData ={
-    profile: Partial<Profile>
-
+export type LoaderData = {
+  profile: Partial<Profile>
 }
 export const loader: LoaderFunction = async ({ params, request }) => {
   const profileId = params.id
@@ -25,7 +24,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   invariant(user, 'user is required')
   invariant(profileId, 'profileId is required')
   const profile = await getUserProfile(user.id)
-  if(!profile) throw redirect('/profile/new')
+  if (!profile) throw redirect('/profile/new')
 
   const data: LoaderData = {
     profile: profile
@@ -46,9 +45,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   const bio = formData.get('bio')
   const avatarImage = formData.get('avatarImage')
 
-  if(typeof firstName !== 'string' || typeof lastName !== 'string' || typeof bio !== 'string' || typeof avatarImage !== 'string') {
+  if (
+    typeof firstName !== 'string' ||
+    typeof lastName !== 'string' ||
+    typeof bio !== 'string' ||
+    typeof avatarImage !== 'string'
+  ) {
     throw new Error('Invalid form data')
-    }
+  }
 
   const fields = {
     firstName,
@@ -71,9 +75,7 @@ export default function EditProfile() {
     lastName: data.profile?.lastName,
     bio: data.profile?.bio,
     avatarImage: data.profile?.avatarImage
-
   })
-
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -85,29 +87,23 @@ export default function EditProfile() {
     })
   }
 
-  function handleSubmit(event: {
+  async function handleSubmit(event: {
     currentTarget:
       | FormData
       | HTMLFormElement
       | HTMLInputElement
-        | HTMLButtonElement
-        | URLSearchParams
-        |
-        { [name: string]: string }
-        | null
-    },
-  ) {
+      | HTMLButtonElement
+      | URLSearchParams
+      | { [name: string]: string }
+      | null
+  }) {
+    const imageUrl = fetcher.submit(event.currentTarget, { replace: true })
 
-
-
-
-      const imageUrl = fetcher.submit(event.currentTarget, { replace: true }
-        )
+    if (typeof imageUrl !== 'string') throw new Error('Invalid image url')
 
     setFormData({
-        ...formData,
-        avatarImage:    imageUrl
-
+      ...formData,
+      avatarImage: imageUrl
     })
   }
 
@@ -152,7 +148,6 @@ export default function EditProfile() {
               <p>{actionData?.fieldErrors?.lastName}</p>
             )}
 
-
             {actionData?.fieldErrors?.bio && (
               <p>{actionData?.fieldErrors?.bio}</p>
             )}
@@ -177,7 +172,6 @@ export default function EditProfile() {
               </>
             ) : (
               <>
-
                 <div className='h-40 md:h-60'>
                   <img
                     src={formData.avatarImage}
