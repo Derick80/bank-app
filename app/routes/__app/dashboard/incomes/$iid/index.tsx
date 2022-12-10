@@ -31,9 +31,7 @@ export default function IncomeRoute() {
       <div className='flex w-full justify-around p-2'>
         <div>
           <h1 className='text-2xl'>Income</h1>
-          <Content data={data.income}
-            type='incomes'
-          preview={false} />
+          <Content data={data.income} type='incomes' preview={false} />
         </div>
       </div>
     </>

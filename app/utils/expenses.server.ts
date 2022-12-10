@@ -43,7 +43,7 @@ export const getUserExpensesByMonth = async (
   from: string,
   to: string
 ) => {
-return await prisma.expense.findMany({
+  return await prisma.expense.findMany({
     where: {
       userId,
       due_date: {

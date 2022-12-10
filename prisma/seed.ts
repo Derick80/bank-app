@@ -86,7 +86,7 @@ async function seed() {
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2023-02-15'),
-        type: ''
+        type: 'Payroll'
       },
 
       {
@@ -182,7 +182,7 @@ async function seed() {
         amount: 1500,
         due_date: new Date('2022-12-01'),
         frequency: 'MONTHLY',
-        type: ''
+        type: 'Mortgage'
       },
       {
         userId: user.id,
@@ -191,7 +191,7 @@ async function seed() {
         amount: 1500,
         due_date: new Date('2022-01-01'),
         frequency: 'MONTHLY',
-        type: ''
+        type: 'Mortgage'
       },
       {
         userId: user.id,
@@ -200,7 +200,7 @@ async function seed() {
         amount: 1500,
         due_date: new Date('2022-02-01'),
         frequency: 'MONTHLY',
-        type: ''
+        type: 'Mortgage'
       },
       {
         userId: user.id,
@@ -273,7 +273,7 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-11-27'),
-        type: 'Student Loan'
+        type: `Student Loan`
       },
       {
         userId: user.id,
@@ -281,7 +281,7 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-12-27'),
-        type: 'Student Loan'
+        type: `Student Loan`
       },
       {
         userId: user.id,
@@ -289,7 +289,7 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-01-27'),
-        type: 'Student Loan'
+        type: `Student Loan`
       },
       {
         userId: user.id,
@@ -297,7 +297,7 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-02-27'),
-        type: 'Student Loan'
+        type: `Student Loan`
       },
       {
         userId: user.id,
@@ -305,7 +305,7 @@ async function seed() {
         accountNameId: '7760',
         amount: 450,
         due_date: new Date('2022-11-15'),
-        type: ''
+        type: 'Credit Card'
       },
       {
         userId: user.id,
