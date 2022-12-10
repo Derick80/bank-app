@@ -1,9 +1,12 @@
+import { useLoaderData } from '@remix-run/react'
 import React, { useState } from 'react'
 import { Theme, useTheme } from '~/lib/theme-provider'
+import { LoaderData } from '~/routes/__app/profile/$id'
+import { useOptionalUser, useUser } from '~/utils/utils'
 import ColorMode from '../color-mode'
 import Footer from './footer'
 import LinkMaker from './link-maker'
-import NavBar, { siteLinks } from './nav-bar'
+import NavBar from './nav-bar'
 import SiteLogo from './site-logo'
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -28,7 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
       </NavBar>
 
-      <main className='flex h-full flex-col text-black dark:text-white'>
+      <main className='flex h-full w-full flex-col place-items-center text-black dark:text-white'>
         {children}
       </main>
       <Footer />
@@ -39,14 +42,38 @@ export function Layout({ children }: { children: React.ReactNode }) {
 function NavLinks() {
   const [isActive, setIsActive] = useState(false)
   const toggle = () => setIsActive(!isActive)
+  const user = useOptionalUser()
 
   return (
     <nav>
       <ul className='flex space-x-5'>
-        {siteLinks.map((link, index) => (
-          <LinkMaker key={index} link={link} toggle={toggle} />
-        ))}
+        {user ? (
+          <>
+            {userSiteLinks.map((link, index) => (
+              <LinkMaker key={index} link={link} toggle={toggle} />
+            ))}
+          </>
+        ) : (
+          <>
+            {siteLinks.map((link, index) => (
+              <LinkMaker key={index} link={link} toggle={toggle} />
+            ))}
+          </>
+        )}
       </ul>
     </nav>
   )
 }
+export const siteLinks = [
+  { name: 'Home', href: '/', icon_name: 'home' },
+  { name: 'About', href: '/about', icon_name: 'attach_money' },
+  { name: 'Login', href: '/auth/login', icon_name: 'login' }
+]
+export const userSiteLinks = [
+  { name: 'Home', href: '/', icon_name: 'home' },
+  { name: 'Income', href: '/dashboard/incomes', icon_name: 'attach_money' },
+  { name: 'Bills', href: '/dashboard/expenses', icon_name: 'money_off' },
+  { name: 'profile', href: '/profile', icon_name: 'info' },
+  { name: 'Account', href: '/account', icon_name: 'person' },
+  { name: 'Logout', href: '/auth/logout', icon_name: 'logout' }
+]

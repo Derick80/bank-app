@@ -31,18 +31,21 @@ export const meta: MetaFunction = () => ({
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
 export type LoaderData = {
+  user: {
+    id: string
+    userName: string
+    email: string
+  } | null
   theme: Theme | null
-  loggedIn: boolean
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
   const themeSession = await getThemeSession(request)
   const user = await isAuthenticated(request)
-  const loggedIn = user ? true : false
 
   const data: LoaderData = {
-    theme: themeSession.getTheme(),
-    loggedIn
+    user,
+    theme: themeSession.getTheme()
   }
 
   return data

@@ -1,8 +1,8 @@
 import type { ActionFunction, MetaFunction } from '@remix-run/node'
 import { Form, Link, useFormAction } from '@remix-run/react'
 import { badRequest, serverError } from 'remix-utils'
-import { AuthForm } from '~/components/auth/auth-form'
-import { SocialLoginForm } from '~/components/auth/social-login-form'
+import { AuthForm } from '~/components/shared/auth/auth-form'
+import { SocialLoginForm } from '~/components/shared/auth/social-login-form'
 import { authenticator } from '~/utils/auth/authenticator.server'
 
 export const meta: MetaFunction = () => {
