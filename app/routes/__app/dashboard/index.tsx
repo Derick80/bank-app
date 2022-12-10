@@ -26,7 +26,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const { now, then } = await dateRange()
   const results = await getUserExpensesByMonth(userId, now, then)
-const totalsByType = results.reduce(
+  const totalsByType = results.reduce(
     (acc: { [key: string]: number }, expense) => {
       if (acc[expense.type]) {
         acc[expense.type] += expense.amount
@@ -37,7 +37,7 @@ const totalsByType = results.reduce(
     },
     {}
   )
-console.log('totalsByType', totalsByType);
+  console.log('totalsByType', totalsByType)
 
   return json({ incomes, results, totalsByType })
 }
@@ -48,48 +48,44 @@ export default function DashBoardRoute() {
     (acc: number, income: { amount: number }) => acc + income.amount,
     0
   )
-    const expenseSubTotal = data.results.reduce(
+  const expenseSubTotal = data.results.reduce(
     (acc: number, expense: { amount: number }) => acc + expense.amount,
     0
   )
   const expenseScale = chroma.scale(['yellow', 'red', 'black'])
 
-  const subTotal = data.results.map((expense: {type:string, amount:number,lengths:number}) => {
-    const percentage = Number(expense.amount / expenseSubTotal)
-    return {
-      id: expense.type,
-      percent: Number((percentage * 100).toFixed(0)),
-      fills: expenseScale(percentage).css()
-
+  const subTotal = data.results.map(
+    (expense: { type: string; amount: number; lengths: number }) => {
+      const percentage = Number(expense.amount / expenseSubTotal)
+      return {
+        id: expense.type,
+        percent: Number((percentage * 100).toFixed(0)),
+        fills: expenseScale(percentage).css()
+      }
     }
-  })
-  console.log('subTotal', subTotal);
-
+  )
+  console.log('subTotal', subTotal)
 
   return (
     <>
       <h1 className='text-2xl font-semibold'>Current Month Summary</h1>
-   <BandContainer>
-        {
-          subTotal.map((expense: { id: string; percent: number; fills: string }) => (
+      <BandContainer>
+        {subTotal.map(
+          (expense: { id: string; percent: number; fills: string }) => (
             <BandChart
               key={expense.id}
               id={expense.id}
               itemWidth={expense.percent}
               percentage={expense.percent}
               bgFill={expense.fills}
-
             />
-          ))
-        }
-
-   </BandContainer>
-      <div className='flex w-full flex-r justify-around p-2'>
-        band stuff
-        </div>
-      <div className='flex w-full flex-r justify-around p-2'>
+          )
+        )}
+      </BandContainer>
+      <div className='flex-r flex w-full justify-around p-2'>band stuff</div>
+      <div className='flex-r flex w-full justify-around p-2'>
         <div>
-          <div className='flex justify-between items-center'>
+          <div className='flex items-center justify-between'>
             <h1 className='text-2xl font-semibold uppercase'>Income</h1>
             <Link
               to='/dashboard/incomes/new'
@@ -100,26 +96,24 @@ export default function DashBoardRoute() {
           </div>
           <div>
             <p className='font-Eczar text-3xl font-normal underline decoration-red-700 underline-offset-8 md:text-5xl'>
-              ${ incomeSubTOtal }
+              ${incomeSubTOtal}
             </p>
           </div>
           {data.incomes.map((income: Income) => (
-           <>
+            <>
               <Content
-                key={ income.id }
-                data={ income }
+                key={income.id}
+                data={income}
                 type='incomes'
-                preview={ true }
+                preview={true}
                 showMore
               />
-
-           </>
-
+            </>
           ))}
         </div>
         <div>
           <div>
-           <div className='flex justify-between items-center'>
+            <div className='flex items-center justify-between'>
               <h1 className='text-2xl font-semibold uppercase'>Expenses</h1>
               <Link
                 to='/dashboard/expenses/new'
@@ -127,11 +121,11 @@ export default function DashBoardRoute() {
               >
                 + New Expense
               </Link>
-              </div>
+            </div>
           </div>
           <div>
             <p className='font-Eczar text-3xl font-normal underline decoration-red-700 underline-offset-8 md:text-5xl'>
-              ${ expenseSubTotal }
+              ${expenseSubTotal}
             </p>
           </div>
           {data.results.map((expense: Expense) => (
@@ -140,6 +134,7 @@ export default function DashBoardRoute() {
               data={expense}
               type='expenses'
               preview={true}
+              showEdit
               showMore
             />
           ))}

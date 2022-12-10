@@ -10,6 +10,7 @@ export type IncomeCreate = Omit<
 > & {
   userId: string
   frequency: string
+  incomeId?: string
 }
 
 const pickIncome = {
@@ -69,13 +70,18 @@ export const createIncome = async (input: IncomeCreate) => {
     }
   })
 }
-export const updateIncome = async (
-  input: Prisma.IncomeWhereUniqueInput & Prisma.IncomeUpdateInput
-) => {
-  const { id, ...data } = input
+export const updateIncome = async (input: IncomeCreate) => {
   const updated = await prisma.income.update({
-    where: { id },
-    data
+    where: { id: input.incomeId },
+    data: {
+      description: input.description,
+      amount: input.amount,
+      due_date: input.due_date,
+      type: input.type,
+      frequency: input.frequency,
+      recurring: input.recurring,
+      userId: input.userId
+    }
   })
   return updated
 }

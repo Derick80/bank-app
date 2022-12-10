@@ -4,6 +4,11 @@ import { prisma } from './prisma.server'
 
 export type ExpenseQuery = Partial<Expense> & {}
 
+export type ExpenseCreate = Omit<Expense, 'createdAt' | 'updatedAt' | 'id'> & {
+  userId: string
+  frequency: string
+  expenseId?: string
+}
 const pickExpense = {
   id: true,
   description: true,
@@ -52,5 +57,14 @@ export const getUserExpensesByMonth = async (
       }
     },
     select: pickExpense
+  })
+}
+
+export const getExpense = async (expenseId: string, userId: string) => {
+  return await prisma.expense.findFirst({
+    where: {
+      id: expenseId,
+      userId
+    }
   })
 }
