@@ -40,10 +40,7 @@ export default function Index() {
       </div>
       <div className='mt-2 flex justify-center'>
         {data.userId === data.profile.userId ? (
-          <Link
-            to={`/profile/${data.profile.id}`}
-            className='rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700'
-          >
+          <Link to={`/profile/${data.profile.id}`} className='btn-solid'>
             Edit
           </Link>
         ) : null}

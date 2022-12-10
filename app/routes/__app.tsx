@@ -3,8 +3,8 @@ import { Layout } from '~/components/shared/layout/layout'
 
 export default function Index() {
   return (
-    <Layout>
+    <>
       <Outlet />
-    </Layout>
+    </>
   )
 }

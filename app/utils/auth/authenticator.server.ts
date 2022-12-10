@@ -1,9 +1,10 @@
 import { User } from '@prisma/client'
 import { Authenticator, AuthorizationError } from 'remix-auth'
 import { getSession, sessionStorage } from './session.server'
-import { loginStrategy, registerStrategy } from './form.server'
+import { loginStrategy, registerStrategy } from './strategy/form.server'
 import { getUser } from '../users.server'
 import { Session } from '@remix-run/node'
+import { gitHubStrategy } from './strategy/github.server'
 
 export const authenticator = new Authenticator<User['id']>(sessionStorage, {
   throwOnError: true
@@ -11,6 +12,7 @@ export const authenticator = new Authenticator<User['id']>(sessionStorage, {
 
 authenticator.use(registerStrategy, 'register')
 authenticator.use(loginStrategy, 'login')
+authenticator.use(gitHubStrategy, 'github')
 
 export const isAuthenticated = async (request: Request) => {
   const userId = await authenticator.isAuthenticated(request)

@@ -4,10 +4,9 @@ const prisma = new PrismaClient()
 
 async function seed() {
     const seedEmail = (await process.env.SEED_EMAIL) as string
-  const email = seedEmail
 
   // cleanup the existing database
-  await prisma.user.delete({ where: { email: email } }).catch(() => {
+  await prisma.user.delete({ where: { email: seedEmail } }).catch(() => {
     // no worries if it doesn't exist yet
   })
 
@@ -15,7 +14,7 @@ async function seed() {
 
   const user = await prisma.user.create({
     data: {
-      email,
+      email: seedEmail,
       userName: 'Derick',
       password: hashedPassword,
       role: 'ADMIN',
@@ -37,14 +36,14 @@ async function seed() {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
-        due_date: new Date('2021-11-01'),
+        due_date: new Date('2022-11-01'),
         type: 'Payroll'
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
-        due_date: new Date('2021-11-15'),
+        due_date: new Date('2022-11-15'),
         type: 'Payroll'
       },
       {
@@ -94,7 +93,7 @@ async function seed() {
         userId: user.id,
         description: 'Rental Income',
         amount: 200,
-        due_date: new Date('2021-11-01'),
+        due_date: new Date('2022-11-01'),
         frequency: 'MONTHLY',
         type: 'Rental Income'
       },
@@ -102,7 +101,7 @@ async function seed() {
         userId: user.id,
         description: 'Rental Income',
         amount: 200,
-        due_date: new Date('2021-12-01'),
+        due_date: new Date('2022-12-01'),
         frequency: 'MONTHLY',
         type: 'Rental Income'
       },
@@ -140,7 +139,7 @@ async function seed() {
         description: 'Car',
         accountNameId: '2010',
         amount: 600,
-        due_date: new Date('2021-11-15'),
+        due_date: new Date('2022-11-15'),
         type: 'Auto'
       },
       {
@@ -148,7 +147,7 @@ async function seed() {
         description: 'Car',
         accountNameId: '2010',
         amount: 600,
-        due_date: new Date('2021-12-15'),
+        due_date: new Date('2022-12-15'),
         type: 'Auto'
       },
       {
@@ -172,7 +171,7 @@ async function seed() {
         description: 'Mortgage',
         accountNameId: '9400',
         amount: 1500,
-        due_date: new Date('2021-11-01'),
+        due_date: new Date('2022-11-01'),
         frequency: 'MONTHLY',
         type: 'Mortgage'
       },
@@ -181,7 +180,7 @@ async function seed() {
         description: 'Mortgage',
         accountNameId: '9400',
         amount: 1500,
-        due_date: new Date('2021-12-01'),
+        due_date: new Date('2022-12-01'),
         frequency: 'MONTHLY',
         type: ''
       },
@@ -208,7 +207,7 @@ async function seed() {
         description: 'Gas Bill',
         accountNameId: '2011',
         amount: 100,
-        due_date: new Date('2021-11-27'),
+        due_date: new Date('2022-11-27'),
         type: 'Utilities'
       },
       {
@@ -216,7 +215,7 @@ async function seed() {
         description: 'Gas Bill',
         accountNameId: '2011',
         amount: 100,
-        due_date: new Date('2021-12-27'),
+        due_date: new Date('2022-12-27'),
         type: 'Utilities'
       },
       {
@@ -240,7 +239,7 @@ async function seed() {
         description: 'Grocery',
         accountNameId: 'Food Expense',
         amount: 150,
-        due_date: new Date('2021-11-18'),
+        due_date: new Date('2022-11-18'),
         type: 'Grocery'
       },
       {
@@ -248,7 +247,7 @@ async function seed() {
         description: 'Grocery',
         accountNameId: 'Food Expense',
         amount: 150,
-        due_date: new Date('2021-12-18'),
+        due_date: new Date('2022-12-18'),
         type: 'Grocery'
       },
       {
@@ -273,7 +272,7 @@ async function seed() {
         description: 'American Education Services',
         accountNameId: 'AES1-3',
         amount: 350,
-        due_date: new Date('2021-11-27'),
+        due_date: new Date('2022-11-27'),
         type: 'Student Loan'
       },
       {
@@ -281,7 +280,7 @@ async function seed() {
         description: 'American Education Services',
         accountNameId: 'AES1-3',
         amount: 350,
-        due_date: new Date('2021-12-27'),
+        due_date: new Date('2022-12-27'),
         type: 'Student Loan'
       },
       {
@@ -305,7 +304,7 @@ async function seed() {
         description: 'Chase',
         accountNameId: '7760',
         amount: 450,
-        due_date: new Date('2021-11-15'),
+        due_date: new Date('2022-11-15'),
         type: ''
       },
       {
@@ -313,7 +312,7 @@ async function seed() {
         description: 'Chase',
         accountNameId: '7760',
         amount: 450,
-        due_date: new Date('2021-12-15'),
+        due_date: new Date('2022-12-15'),
         type: 'Credit Card'
       },
       {
@@ -337,7 +336,7 @@ async function seed() {
         description: 'Goolge Drive',
         accountNameId: '9499',
         amount: 10.71,
-        due_date: new Date('2021-11-09'),
+        due_date: new Date('2022-11-09'),
         type: 'Monthly Subscription Service'
       },
       {
@@ -345,7 +344,7 @@ async function seed() {
         description: 'Goolge Drive',
         accountNameId: '9499',
         amount: 10.71,
-        due_date: new Date('2021-12-09'),
+        due_date: new Date('2022-12-09'),
         type: 'Monthly Subscription Service'
       },
       {

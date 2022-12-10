@@ -20,7 +20,7 @@ export default function LinkMaker({
         className={({ isActive }) =>
           ` ${
             isActive
-              ? 'flex flex-col items-center border-b-2'
+              ? 'flex flex-col items-center border-b-2 border-black'
               : 'flex flex-col items-center'
           }`
         }

@@ -14,15 +14,44 @@ model User {
   id        String    @id @unique @default(uuid())
   userName String    @unique
   email     String    @unique
-  password  String
+  password  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
   role      Role      @default(USER)
+   accounts Account[]
+  tokens  Token[]
   incomes   Income[]
   expenses  Expense[]
   profile  Profile?
 }
+model Token {
+  id        String    @id @default(cuid())
+  token     String
+  type      TokenType
+  expiresAt DateTime?
+  sentTo    String?
+  usedAt    DateTime?
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([token, type])
+  @@index([userId])
+}
 
+
+model Account {
+  id                String  @id @default(cuid())
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
 model Profile {
   id        String    @id @unique @default(uuid())
   firstName String
@@ -81,4 +110,9 @@ enum Frequency {
   MONTHLY
   YEARLY
   BIANNUALLY
+}
+enum TokenType {
+  REFRESH_TOKEN
+  VERIFY_EMAIL
+  RESET_PASSWORD
 }

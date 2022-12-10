@@ -41,6 +41,7 @@ export const uploadHandler: UploadHandler = unstable_composeUploadHandlers(
     }
     const uploadedImage = (await uploadImage(data)) as string
     // @ts-ignore
+    // this ignore came from the source i followed.  I think I kinda solved this by adding the type to the uploadImage function
     return uploadedImage.secure_url
   },
   unstable_createMemoryUploadHandler()

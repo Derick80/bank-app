@@ -8,8 +8,8 @@ export const siteLinks = [
 
 export default function NavBar({ children }: { children?: React.ReactNode }) {
   return (
-    <nav className='flex flex-col items-center justify-center md:flex-row md:justify-between'>
+    <header className='flex w-full flex-col items-center md:flex-row'>
       {children}
-    </nav>
+    </header>
   )
 }

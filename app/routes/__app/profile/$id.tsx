@@ -1,11 +1,12 @@
-import { Profile } from '@prisma/client'
+import type { Profile } from '@prisma/client'
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import {
   Form,
   useActionData,
   useFetcher,
-  useLoaderData
+  useLoaderData,
+  useTransition
 } from '@remix-run/react'
 import { useState } from 'react'
 import invariant from 'tiny-invariant'
@@ -13,7 +14,6 @@ import FormField from '~/components/shared/form-field'
 import { UploadMe } from '~/components/upload'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { getUserProfile, updateUserProfile } from '~/utils/profile.server'
-import { validateText } from '~/utils/validators.server'
 
 export type LoaderData = {
   profile: Partial<Profile>
@@ -65,6 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   await updateUserProfile(fields)
   return redirect(`/profile`)
+  // todo: add error handling
 }
 export default function EditProfile() {
   const data = useLoaderData<LoaderData>()
@@ -97,10 +98,17 @@ export default function EditProfile() {
       | { [name: string]: string }
       | null
   }) {
-    const imageUrl = fetcher.submit(event.currentTarget, { replace: true })
+    function getUrl() {
+      const imageUrl = fetcher.submit(event.currentTarget, { replace: true })
+      if (typeof imageUrl !== 'string') throw new Error('Invalid image url')
+      return imageUrl
+    }
+    const imageUrl = await getUrl()
+    // const imageUrl = fetcher.submit(event.currentTarget, { replace: true }, )
+    // when I just had const imageUrl = fetcher.submit(event.currentTarget, { replace: true }) I was getting a ide error that indicated that avatarImage in the setFormData setter was void and not going to work.  Using the below commented code did not work.
+    // if (typeof imageUrl !== 'string') throw new Error('Invalid image url')
 
-    if (typeof imageUrl !== 'string') throw new Error('Invalid image url')
-
+    // I solved this by creating the getUrl function above and returning the imageUrl
     setFormData({
       ...formData,
       avatarImage: imageUrl
@@ -186,7 +194,7 @@ export default function EditProfile() {
 
         <div className='flex flex-row items-center justify-center'>
           <button
-            className='rounded bg-blue-600 px-8 py-3 text-white focus:outline-none disabled:opacity-25'
+            className='btn-base'
             type='submit'
             disabled={fetcher.state === 'submitting' ? true : false}
           >
