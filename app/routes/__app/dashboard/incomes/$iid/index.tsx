@@ -1,7 +1,7 @@
 import { json, LoaderFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
-import { IncomeContent } from '~/components/shared/income-content'
+import { Content } from '~/components/shared/content'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { getIncome, getUserIncomes } from '~/utils/incomes.server'
 
@@ -31,7 +31,9 @@ export default function IncomeRoute() {
       <div className='flex w-full justify-around p-2'>
         <div>
           <h1 className='text-2xl'>Income</h1>
-          <IncomeContent income={data.income} preview={false} />
+          <Content data={data.income}
+            type='incomes'
+          preview={false} />
         </div>
       </div>
     </>

@@ -1,8 +1,8 @@
-import type { Income } from '@prisma/client'
+import type { Expense, Income } from '@prisma/client'
 import type { LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import { IncomeContent } from '~/components/shared/income-content'
+import { Link, useLoaderData } from '@remix-run/react'
+import { Content } from '~/components/shared/content'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { dateRange } from '~/utils/date-functions.server'
 import type { ExpenseQuery } from '~/utils/expenses.server'
@@ -23,9 +23,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const incomes = await getUserCurrentMonthIncomes({ id: user.id })
 
   const { now, then } = await dateRange()
-  const result = await getUserExpensesByMonth(userId, now, then)
+  const results = await getUserExpensesByMonth(userId, now, then)
 
-  return json({ incomes, result })
+  return json({ incomes, results })
 }
 
 export default function DashBoardRoute() {
@@ -37,10 +37,14 @@ export default function DashBoardRoute() {
       <div className='flex w-full flex-col justify-around p-2'>
         <div>
           <h1 className='text-2xl'>Income</h1>
+          <Link to="/dashboard/incomes/new" className="block p-4 text-xl text-blue-500">
+            + New Note
+          </Link>
           {data.incomes.map((income: Income) => (
-            <IncomeContent
+            <Content
               key={income.id}
-              income={income}
+              data={income}
+              type='incomes'
               preview={true}
               showMore
             />
@@ -48,9 +52,15 @@ export default function DashBoardRoute() {
         </div>
         <div>
           <h1 className='text-2xl'>Expenses</h1>
-          {/* { data.results.result.map((expense: Income) => (
-            <IncomeContent key={ expense.id } income={ expense } />
-          )) } */}
+          {data.results.map((expense: Expense) => (
+            <Content
+              key={expense.id}
+              data={expense}
+              type='expenses'
+              preview={true}
+              showMore
+            />
+          ))}
         </div>
       </div>
     </>

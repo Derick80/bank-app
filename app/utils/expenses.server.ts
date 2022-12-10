@@ -10,7 +10,10 @@ const pickExpense = {
   accountNameId: true,
   amount: true,
   due_date: true,
-  type: true
+  type: true,
+  frequency: true,
+  recurring: true,
+  userId: true
 }
 export const getUserCurrentMonthExpenses = async (
   user: Prisma.UserWhereUniqueInput
@@ -40,7 +43,7 @@ export const getUserExpensesByMonth = async (
   from: string,
   to: string
 ) => {
-  const query = await prisma.expense.findMany({
+return await prisma.expense.findMany({
     where: {
       userId,
       due_date: {
@@ -50,21 +53,4 @@ export const getUserExpensesByMonth = async (
     },
     select: pickExpense
   })
-  const subTotal = query.reduce((acc, cur) => acc + cur.amount, 0)
-  const subTotalByType = query.reduce((acc, cur) => {
-    acc[cur.type] = acc[cur.type] ? acc[cur.type] + cur.amount : cur.amount
-    return acc
-  }, {})
-
-  const result = {
-    subTotal: subTotal,
-    subTotalByType: subTotalByType,
-    ...query
-  }
-  const results = {
-    result,
-    subTotal,
-    subTotalByType
-  }
-  return result
 }

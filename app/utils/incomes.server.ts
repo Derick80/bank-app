@@ -4,6 +4,11 @@ import type { Income } from '@prisma/client'
 import { dateRange } from './date-functions.server'
 export type IncomeQuery = Partial<Income> & {}
 
+export type IncomeCreate = Omit<Income, 'createdAt' | 'updatedAt' | 'frequency' | 'id'> & {
+  userId: string
+  frequency: string
+}
+
 const pickIncome = {
   id: true,
   description: true,
@@ -48,19 +53,20 @@ export const getIncome = async (incomeId: string, userId: string) => {
   })
 }
 
-export const createIncome = async (input: Prisma.IncomeCreateInput) => {
-  const { id, ...data } = input
+export const createIncome = async (input: IncomeCreate) => {
+
   return await prisma.income.create({
-    data,
-    include: {
-      user: {
-        select: {
-          id: true,
-          email: true,
-          userName: true
-        }
-      }
+    data:{
+      description: input.description,
+      amount: input.amount,
+      due_date: input.due_date,
+      type: input.type,
+      frequency: input.frequency,
+      recurring: input.recurring,
+      userId: input.userId
+
     }
+
   })
 }
 export const updateIncome = async (
