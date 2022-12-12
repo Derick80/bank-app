@@ -14,7 +14,7 @@ export default function LinkMaker({
   toggle
 }: LinkMakerProps) {
   return (
-    <li key={name} className='flex items-center p-2'>
+    <li key={name} className='flex items-center'>
       <NavLink
         to={href}
         className={({ isActive }) =>

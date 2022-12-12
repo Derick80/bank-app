@@ -6,15 +6,18 @@ import invariant from 'tiny-invariant'
 import { Dialog } from '~/components/shared/dialog'
 import { Edit } from '~/components/shared/edit'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
-import { getIncome, updateIncome } from '~/utils/incomes.server'
+import { getIncome, IncomeQuery, updateIncome } from '~/utils/incomes.server'
 import { useUser } from '~/utils/utils'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
   invariant(user, 'User Required')
-  const postId = params.iid
-  invariant(postId, 'Post ID Required')
-  const income = await getIncome(postId, user.id)
+  const incomeId = params.iid
+  invariant(incomeId, 'Post ID Required')
+  const income = await getIncome(incomeId)
+  if (!income) {
+    return json({ error: 'Income not found' }, { status: 404 })
+  }
 
   return json(income)
 }
@@ -33,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
   const paid = Boolean(formData.get('paid'))
-  invariant(paid, 'Paid')
+
   if (
     typeof description !== 'string' ||
     typeof amount !== 'number' ||
@@ -69,7 +72,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 export default function EditIncome() {
-  const data = useLoaderData()
+  const data = useLoaderData<typeof loader>() as IncomeQuery
   const [isOpen, setIsOpen] = useState(true)
 
   return (

@@ -1,9 +1,13 @@
 import { Outlet } from '@remix-run/react'
 
-export default function Index() {
-  return (
-    <>
-      <Outlet />
-    </>
-  )
+
+export default function indexRoute() {
+    return (
+       <>
+       <Outlet />
+       </>
+    )
 }
+
+
+

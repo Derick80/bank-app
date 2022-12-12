@@ -1,31 +1,32 @@
 import { Props } from '@headlessui/react/dist/types'
+import { SerializeFrom } from '@remix-run/node'
 import { Form } from '@remix-run/react'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { ExpenseQuery } from '~/utils/expenses.server'
 import { IncomeQuery } from '~/utils/incomes.server'
 import { useUser } from '~/utils/utils'
+import Slider from './toggleSwitch/slider'
 
+type Concrete<Type> = {
+  [Property in keyof Type]: Type[Property]
+}
 type EditProps = {
-  data:
-    | IncomeQuery
-    | (ExpenseQuery & {
-        accountNameId?: string
-      })
-  type: 'incomes' | 'expenses'
+  data: IncomeQuery | ExpenseQuery
+  type: 'expenses' | 'incomes'
 }
 export const Edit = ({ data, type }: EditProps) => {
   const user = useUser()
 
   const [formData, setFormData] = useState({
-    description: '',
-    accountNameId: '',
-    amount: 0,
-    due_date: '',
-    type: '',
-    frequency: '',
-    recurring: 'true',
-    paid: 'false',
+    description: data.description || '',
+    accountNameId: data.accountNameId || '',
+    amount: data.amount || 0,
+    due_date: data.due_date || '',
+    type: data.type || '',
+    frequency: data.frequency || '',
+    recurring: data.recurring || false,
+    paid: data.paid || true,
     userId: user.id
   })
   const handleInputChange = (
@@ -37,6 +38,13 @@ export const Edit = ({ data, type }: EditProps) => {
     setFormData((form) => ({
       ...form,
       [field]: event.target.value
+    }))
+  }
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((form) => ({
+      ...form,
+      [event.target.name]: event.target.checked
     }))
   }
 
@@ -122,7 +130,7 @@ export const Edit = ({ data, type }: EditProps) => {
         <input
           type='checkbox'
           name='recurring'
-          defaultValue={data.recurring}
+          checked={data.recurring}
           onChange={(event) => handleInputChange(event, 'recurring')}
         />
 
@@ -130,8 +138,8 @@ export const Edit = ({ data, type }: EditProps) => {
         <input
           type='checkbox'
           name='paid'
-          defaultValue={data.paid}
-          onChange={(event) => handleInputChange(event, 'paid')}
+          checked={data.paid}
+          onChange={(event) => handleCheckboxChange(event)}
         />
 
         <button type='submit'>Submit</button>

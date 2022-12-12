@@ -2,7 +2,7 @@ import { NavLink } from '@remix-run/react'
 
 export default function SiteLogo() {
   return (
-    <div className='flex basis-1/3 justify-center'>
+    <div className='flex basis-1/4 justify-center'>
       <NavLink to='/' className='' aria-label='Brand Icon Link'>
         <svg
           width='309.3484'

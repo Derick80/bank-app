@@ -18,12 +18,12 @@ export const MoreButton = ({ data, type }: Props) => {
       {isLoggedIn && isOwner && (
         <>
           <div className='flex flex-row'>
-            <Form method='post' action={`/dashboard/${type}/${data.id}/delete`}>
+            <Form method='post' action={`/${type}/${data.id}/delete`}>
               <button type='submit' className=''>
                 <span className='material-symbols-outlined'>delete</span>{' '}
               </button>
             </Form>
-            <Link to={`/dashboard/${type}/${data.id}/edit`}>
+            <Link to={`/${type}/${data.id}/edit`}>
               <span className='material-symbols-outlined'>edit</span>{' '}
             </Link>
           </div>

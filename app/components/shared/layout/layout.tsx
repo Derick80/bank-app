@@ -1,4 +1,4 @@
-import { useLoaderData } from '@remix-run/react'
+import { Form, useLoaderData } from '@remix-run/react'
 import React, { useState } from 'react'
 import { Theme, useTheme } from '~/lib/theme-provider'
 import { LoaderData } from '~/routes/__app/profile/$id'
@@ -6,32 +6,22 @@ import { useOptionalUser, useUser } from '~/utils/utils'
 import ColorMode from '../color-mode'
 import Footer from './footer'
 import LinkMaker from './link-maker'
+import { UserLog } from './logInOut'
 import NavBar from './nav-bar'
 import SiteLogo from './site-logo'
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useTheme()
 
-  function toggleTheme() {
-    setTheme((prevTheme: any) =>
-      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
-    )
-
-    console.log('theme', theme)
-  }
   return (
     <>
       <NavBar>
         <SiteLogo />
         <NavLinks />
-        <ColorMode
-          onThemedChange={toggleTheme}
-          currentTheme={theme}
-          className='absolute top-0 right-0 flex basis-1/3 p-2 md:relative md:justify-center'
-        />
+        <SiteActions />
+
       </NavBar>
 
-      <main className='flex h-full w-full flex-col place-items-center text-black dark:text-white'>
+      <main className='flex h-full w-full flex-col place-items-center text-black dark:text-white overflow'>
         {children}
       </main>
       <Footer />
@@ -45,12 +35,15 @@ function NavLinks() {
   const user = useOptionalUser()
 
   return (
-    <nav>
+    <nav
+      className='flex items-center justify-center basis-1/2 '
+    >
       <ul className='flex space-x-5'>
         {user ? (
           <>
             {userSiteLinks.map((link, index) => (
               <LinkMaker key={index} link={link} toggle={toggle} />
+
             ))}
           </>
         ) : (
@@ -58,22 +51,107 @@ function NavLinks() {
             {siteLinks.map((link, index) => (
               <LinkMaker key={index} link={link} toggle={toggle} />
             ))}
+
+
           </>
         )}
+
       </ul>
+     {
+      user ? (
+        <>
+        <ul>
+          <li>
+
+
+          </li>
+        </ul>
+        </>
+      )
+      :
+      (
+        <>
+
+        </>
+
+      )
+     }
     </nav>
+  )
+}
+
+function SiteActions() {
+  const user = useOptionalUser()
+  const [theme, setTheme] = useTheme()
+
+  function toggleTheme () {
+    setTheme((prevTheme: any) =>
+      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+    )
+
+    console.log('theme', theme)
+  }
+  return (
+    <ul className='flex space-x-5 basis-1/4 justify-end items-center'>
+      {user ? (
+        <>
+          <ColorMode
+            onThemedChange={ toggleTheme }
+            currentTheme={ theme }
+            className=''
+          />
+          <LinkMaker link={ { name: 'Account', href: '/account', icon_name: 'person' } } />
+          <li
+            className='flex items-center'
+          >
+            <Form
+              method='post'
+              action='actions/logout'
+
+
+            >
+              <button className="btn btn-primary flex flex-col"
+                type='submit'
+
+              >
+                <span className='material-symbols-outlined'>logout</span>
+                Logout</button>
+            </Form>
+          </li>
+
+
+        </>
+      ) : (
+        <>
+            <ColorMode
+              onThemedChange={ toggleTheme }
+              currentTheme={ theme }
+              className=''
+            />
+          {siteActions.map((link, index) => (
+            <LinkMaker key={index} link={link} />
+          ))}
+        </>
+      )}
+    </ul>
   )
 }
 export const siteLinks = [
   { name: 'Home', href: '/', icon_name: 'home' },
-  { name: 'About', href: '/about', icon_name: 'attach_money' },
-  { name: 'Login', href: '/auth/login', icon_name: 'login' }
+  { name: 'About', href: '/about', icon_name: 'info' },
+
+]
+
+export const siteActions = [
+  {name: 'Account', href: '/account', icon_name: 'person'},
+  { name: 'Login', href: '/auth/login', icon_name: 'login' },
+  { name: 'Register', href: '/auth/register', icon_name: 'person_add' },
 ]
 export const userSiteLinks = [
   { name: 'Home', href: '/', icon_name: 'home' },
-  { name: 'Income', href: '/dashboard/incomes', icon_name: 'attach_money' },
-  { name: 'Bills', href: '/dashboard/expenses', icon_name: 'money_off' },
+  { name: 'Income', href: '/incomes', icon_name: 'attach_money' },
+  { name: 'Bills', href: '/expenses', icon_name: 'money_off' },
   { name: 'profile', href: '/profile', icon_name: 'info' },
-  { name: 'Account', href: '/account', icon_name: 'person' },
-  { name: 'Logout', href: '/auth/logout', icon_name: 'logout' }
+
 ]
+

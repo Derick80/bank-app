@@ -1,8 +1,25 @@
+import { useTheme, Theme } from '~/lib/theme-provider'
+import ColorMode from '../color-mode'
+
 export default function Footer() {
+  const [theme, setTheme] = useTheme()
+
+  function toggleTheme () {
+    setTheme((prevTheme: any) =>
+      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+    )
+
+    console.log('theme', theme)
+  }
   return (
-    <footer className='bottom-0 flex w-full justify-center space-x-4 pb-2 md:space-x-8'>
-      <ul>
-        <li>
+    <footer className='sticky flex w-full justify-around space-x-4 pb-2 md:space-x-8 border-2'>
+      <ul
+      className='flex flex-row items-center'
+      >
+        <li
+
+
+        >
           <a
             href='https://www.linkedin.com/in/dhoskinson'
             className='social'
@@ -25,7 +42,7 @@ export default function Footer() {
         </li>
 
         <li>
-          <p className='mr-4'> copyright &copy; {new Date().getFullYear()}</p>
+          <p className='mx-4'> copyright &copy; {new Date().getFullYear()}</p>
         </li>
         <li>
           <a
@@ -46,6 +63,14 @@ export default function Footer() {
             </svg>
           </a>
         </li>
+      </ul>
+      <ul>
+        <ColorMode
+          onThemedChange={ toggleTheme }
+          currentTheme={ theme }
+          className=''
+        />
+
       </ul>
     </footer>
   )

@@ -22,6 +22,7 @@ model User {
   tokens  Token[]
   incomes   Income[]
   expenses  Expense[]
+  deletedExpenses DeletedExpense[]
   profile  Profile?
 }
 model Token {
@@ -90,6 +91,7 @@ model Expense {
   frequency      Frequency  @default(MONTHLY)
   recurring      Boolean    @default(true)
   paid           Boolean    @default(false)
+
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now())
   user           User[]     @relation
@@ -97,7 +99,22 @@ model Expense {
 
 }
 
+model DeletedExpense {
+  id             String     @id @unique @default(uuid())
+  description    String
+  accountNameId  String
+  amount         Float
+  due_date       DateTime
+  type          String
+  frequency      Frequency  @default(MONTHLY)
+  recurring      Boolean    @default(true)
+  paid           Boolean    @default(false)
 
+  deletedAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now())
+  user           User[]     @relation
+  userId         String
+}
 
 enum Role {
   ADMIN

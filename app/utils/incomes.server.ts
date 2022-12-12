@@ -2,7 +2,9 @@ import { Prisma } from '@prisma/client'
 import { prisma } from './prisma.server'
 import type { Income } from '@prisma/client'
 import { dateRange } from './date-functions.server'
-export type IncomeQuery = Partial<Income> & {}
+import { SerializeFrom } from '@remix-run/node'
+export type IncomeQuery = Omit<Income, 'createdAt' | 'updatedAt'> &
+  SerializeFrom<Income>
 
 export type IncomeCreate = Omit<
   Income,
@@ -23,10 +25,10 @@ const pickIncome = {
   recurring: true,
   userId: true
 }
-export const getUserIncomes = async (user: Prisma.UserWhereUniqueInput) => {
+export const getUserIncomes = async (userId: string) => {
   return await prisma.income.findMany({
     where: {
-      userId: user.id
+      userId: userId
     },
     select: pickIncome
   })
@@ -48,11 +50,10 @@ export const getUserCurrentMonthIncomes = async (
   })
 }
 
-export const getIncome = async (incomeId: string, userId: string) => {
+export const getIncome = async (incomeId: string) => {
   return await prisma.income.findFirst({
     where: {
-      id: incomeId,
-      userId
+      id: incomeId
     }
   })
 }

@@ -22,7 +22,7 @@ export const Content = ({
   return (
     <>
       <div className='flex flex-row'>
-        <Link prefetch='intent' to={`/dashboard/${type}/${data.id}/`}>
+        <Link prefetch='intent' to={`/${type}/${data.id}/`}>
           <p>{data.description}</p>
         </Link>
         {data.due_date ? (

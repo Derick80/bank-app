@@ -72,7 +72,7 @@ function App() {
         <NonFlashOfWrongThemeEls ssrTheme={Boolean(data.theme)} />
       </head>
 
-      <body className='h-screen bg-stone-100 text-black dark:bg-zinc-700 dark:text-white'>
+      <body className='min-h-screen bg-stone-100 text-black dark:bg-zinc-700 dark:text-white'>
         <LayoutWrapper />
       </body>
     </html>
