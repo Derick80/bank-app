@@ -12,7 +12,7 @@ export default function Footer() {
     console.log('theme', theme)
   }
   return (
-    <footer className='sticky flex w-full justify-around space-x-4 border-2 pb-2 md:space-x-8'>
+    <footer className='static flex w-full justify-around space-x-4 border-2 pb-2 md:space-x-8'>
       <ul className='flex flex-row items-center'>
         <li>
           <a

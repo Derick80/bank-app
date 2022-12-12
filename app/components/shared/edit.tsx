@@ -12,12 +12,11 @@ type Concrete<Type> = {
   [Property in keyof Type]: Type[Property]
 }
 type EditProps = {
-  data:ExpenseQuery
+  data: ExpenseQuery
   type: 'incomes' | 'expenses'
 }
 export const Edit = ({ data, type }: EditProps) => {
   const user = useUser()
-
 
   const [formData, setFormData] = useState({
     description: data.description || '',
@@ -51,11 +50,7 @@ export const Edit = ({ data, type }: EditProps) => {
 
   return (
     <>
-      <Form
-        method='post'
-
-        className='form-primary'
-      >
+      <Form method='post' className='form-primary'>
         <input
           type='hidden'
           name='userId'
@@ -78,7 +73,7 @@ export const Edit = ({ data, type }: EditProps) => {
               type='text'
               name='accountNameId'
               className='form-field-primary'
-              defaultValue={ data.accountNameId }
+              defaultValue={data.accountNameId}
               onChange={(event) => handleInputChange(event, 'accountNameId')}
             />
           </>
@@ -88,8 +83,9 @@ export const Edit = ({ data, type }: EditProps) => {
         <input
           type='number'
           name='amount'
-          className='form-field-primary'
+          step={0.01}
           defaultValue={data.amount}
+          className='form-field-primary'
           onChange={(event) => handleInputChange(event, 'amount')}
         />
 
@@ -103,50 +99,45 @@ export const Edit = ({ data, type }: EditProps) => {
         />
 
         <label htmlFor='type'>Type</label>
-      { type !== 'incomes' ? (
-        <>
-
+        {type !== 'incomes' ? (
+          <>
             <select
               name='type'
               className='form-field-primary'
-              defaultValue={ data.type }
-              onChange={ (event) => handleInputChange(event, 'type') }
+              defaultValue={data.type}
+              onChange={(event) => handleInputChange(event, 'type')}
             >
               <option value='Payroll Income'>Payroll</option>
               <option value='Rental Income'>Rental Income</option>
               <option value='Other Income'>Other</option>
             </select>
-        </>
-      ):(
-        <>
-              <label htmlFor='accountNameId'>Account Name</label>
-              <input
-                type='text'
-                name='accountNameId'
-                className='form-field-primary'
-                defaultValue={ data.accountNameId }
-                onChange={ (event) => handleInputChange(event, 'accountNameId') }
-              />
-              <select
-                name='type'
-                className='form-field-primary'
-                defaultValue={ data.type }
-                onChange={ (event) => handleInputChange(event, 'type') }
-              >
-                <option value='Mortgage'>Mortgage</option>
-                <option value='Student Loan'>Student Loan</option>
-                <option value='Utilities'>Utilities</option>
-              <option
-              value='Auto'>Auto</option>
+          </>
+        ) : (
+          <>
+            <label htmlFor='accountNameId'>Account Name</label>
+            <input
+              type='text'
+              name='accountNameId'
+              className='form-field-primary'
+              defaultValue={data.accountNameId}
+              onChange={(event) => handleInputChange(event, 'accountNameId')}
+            />
+            <select
+              name='type'
+              className='form-field-primary'
+              defaultValue={data.type}
+              onChange={(event) => handleInputChange(event, 'type')}
+            >
+              <option value='Mortgage'>Mortgage</option>
+              <option value='Student Loan'>Student Loan</option>
+              <option value='Utilities'>Utilities</option>
+              <option value='Auto'>Auto</option>
               <option value='Credit Card'>Credit Card</option>
-              <option
-              value='Monthly Subscription'>Monthly Subscription</option>
-              <option
-              value='Grocery'>Grocery</option>
-
-              </select>
-        </>
-      )}
+              <option value='Monthly Subscription'>Monthly Subscription</option>
+              <option value='Grocery'>Grocery</option>
+            </select>
+          </>
+        )}
 
         <label htmlFor='frequency'>Frequency</label>
         <select
@@ -177,22 +168,24 @@ export const Edit = ({ data, type }: EditProps) => {
           onChange={(event) => handleCheckboxChange(event)}
         />
 
-      <div
-        className='flex justify-center items-center'
-      >
-        <button type='submit'
-          name='_action' value='updateExpenses'
-
-        className='btn-base btn-outline'>
-          Update Expense
-        </button>
-        <button type='submit'
-          name='_action' value='updateIncomes'
-          className='btn-base btn-solid'>
-          Update Income
-        </button>
-
-      </div>
+        <div className='flex items-center justify-center'>
+          <button
+            type='submit'
+            name='_action'
+            value='updateExpenses'
+            className='btn-base btn-outline'
+          >
+            Update Expense
+          </button>
+          <button
+            type='submit'
+            name='_action'
+            value='updateIncomes'
+            className='btn-base btn-solid'
+          >
+            Update Income
+          </button>
+        </div>
       </Form>
     </>
   )

@@ -20,7 +20,7 @@ export const Content = ({
   showMore = false
 }: ContentProps) => {
   const user = useOptionalUser()
-  console.log('type', type);
+  console.log('type', type)
 
   return (
     <>
@@ -43,22 +43,21 @@ export const Content = ({
         )}
       </div>
 
-        {showMore && user && (
-          <>
-            <div className='flex flex-row'>
-              <Form method='post' action={`/${type}/${data.id}/delete`}>
-                <button type='submit' className=''>
-                  <span className='material-symbols-outlined'>delete</span>{' '}
-                </button>
-              </Form>
-              <Link to={`/${type}/${data.id}/edit`}>
-                <span className='material-symbols-outlined'>edit</span>{' '}
-              </Link>
-            </div>
-          </>
-        )}
-        <div>
-      </div>
+      {showMore && user && (
+        <>
+          <div className='flex flex-row'>
+            <Form method='post' action={`/${type}/${data.id}/delete`}>
+              <button type='submit' className=''>
+                <span className='material-symbols-outlined'>delete</span>{' '}
+              </button>
+            </Form>
+            <Link to={`/${type}/${data.id}/edit`}>
+              <span className='material-symbols-outlined'>edit</span>{' '}
+            </Link>
+          </div>
+        </>
+      )}
+      <div></div>
     </>
   )
 }

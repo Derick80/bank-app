@@ -19,10 +19,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <SiteActions />
       </NavBar>
 
-      <main className='overflow flex h-full w-full flex-col place-items-center text-black dark:text-white'>
-        {children}
+      <main className='h-full w-full'>
+{children}
       </main>
-      <Footer />
     </>
   )
 }
@@ -49,7 +48,6 @@ function NavLinks() {
           </>
         )}
       </ul>
-
     </nav>
   )
 }
@@ -60,23 +58,22 @@ function SiteActions() {
 
   function toggleTheme() {
     setTheme((prevTheme: any) =>
-     prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
     )
-
   }
   return (
     <ul className='flex basis-1/4 items-center justify-end space-x-5'>
       {user ? (
         <>
-
-                 <div
-          className='noscript-hidden lg:block'>
-            <DarkModeToggle
-
-            />
+          <div className='noscript-hidden lg:block'>
+            <DarkModeToggle />
           </div>
           <LinkMaker
-            link={{ name: 'Preferences', href: '/preferences', icon_name: 'account_circle' }}
+            link={{
+              name: 'Preferences',
+              href: '/preferences',
+              icon_name: 'account_circle'
+            }}
           />
           <li className='flex items-center'>
             <Form method='post' action='actions/logout'>
@@ -89,8 +86,7 @@ function SiteActions() {
         </>
       ) : (
         <>
-         <DarkModeToggle
-          />
+          <DarkModeToggle />
           {siteActions.map((link, index) => (
             <LinkMaker key={index} link={link} />
           ))}
@@ -100,55 +96,59 @@ function SiteActions() {
   )
 }
 
-const iconTransformOrigin = {transformOrigin:'50% 100px'}
+const iconTransformOrigin = { transformOrigin: '50% 100px' }
 
-function DarkModeToggle ({ variant = 'icon' }: { variant?: 'icon' | 'labelled' }){
+function DarkModeToggle({
+  variant = 'icon'
+}: {
+  variant?: 'icon' | 'labelled'
+}) {
   const [, setTheme] = useTheme()
-  return(
-            <>
+  return (
+    <>
       <button
-        onClick={ () =>setTheme((prevTheme => prevTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK))}
-
-        className={ clsx(
-          'border-black dark:border-white hover:border-primary focus:border-primary inline-flex h-14 items-center justify-center overflow-hidden rounded-full border-2 p-1 transition focus:outline-none',
+        onClick={() =>
+          setTheme((prevTheme) =>
+            prevTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK
+          )
+        }
+        className={clsx(
+          'hover:border-primary focus:border-primary inline-flex h-14 items-center justify-center overflow-hidden rounded-full border-2 border-black p-1 transition focus:outline-none dark:border-white',
           {
             'w-14': variant === 'icon',
-            'px-8': variant === 'labelled',
-          },
-        ) }
-
-    >
-        {/* note that the duration is longer then the one on body, controlling the bg-color */ }
-        <div className="relative h-8 w-8">
+            'px-8': variant === 'labelled'
+          }
+        )}
+      >
+        {/* note that the duration is longer then the one on body, controlling the bg-color */}
+        <div className='relative h-8 w-8'>
           <span
-            className="absolute inset-0 rotate-90 transform text-black transition duration-1000 motion-reduce:duration-[0s] dark:rotate-0 dark:text-sky-400"
-            style={ iconTransformOrigin }
+            className='absolute inset-0 rotate-90 transform text-black transition duration-1000 motion-reduce:duration-[0s] dark:rotate-0 dark:text-sky-400'
+            style={iconTransformOrigin}
           >
             <MoonIcon />
           </span>
           <span
-            className="absolute inset-0 rotate-0 transform text-yellow-400 transition duration-1000 motion-reduce:duration-[0s] dark:-rotate-90 dark:text-white"
-            style={ iconTransformOrigin }
+            className='absolute inset-0 rotate-0 transform text-yellow-400 transition duration-1000 motion-reduce:duration-[0s] dark:-rotate-90 dark:text-white'
+            style={iconTransformOrigin}
           >
             <SunIcon />
           </span>
         </div>
         <span
-          className={ clsx('ml-4 text-black dark:text-white', {
-            'sr-only': variant === 'icon',
-          }) }
-        > <Themed dark="switch to light mode" light="switch to dark mode" />
+          className={clsx('ml-4 text-black dark:text-white', {
+            'sr-only': variant === 'icon'
+          })}
+        >
+          {' '}
+          <Themed dark='switch to light mode' light='switch to dark mode' />
         </span>
-
-
-    </button>
+      </button>
     </>
   )
 }
 
-export const siteLinks = [
-  { name: 'Home', href: '/', icon_name: 'home' },
-]
+export const siteLinks = [{ name: 'Home', href: '/', icon_name: 'home' }]
 
 export const siteActions = [
   { name: 'Login', href: '/auth/login', icon_name: 'login' },

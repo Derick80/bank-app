@@ -73,8 +73,6 @@ export const getUserExpensesByMonth = async (
   })
 }
 
-
-
 export const getExpense = async (expenseId: string) => {
   return await prisma.expense.findUnique({
     where: {
@@ -111,7 +109,6 @@ export const deletedExpense = async (input: Prisma.IncomeWhereUniqueInput) => {
 }
 
 export const updateExpense = async (input: ExpenseCreate) => {
-
   const updated = await prisma.expense.update({
     where: { id: input.expenseId },
     data: {
@@ -125,7 +122,6 @@ export const updateExpense = async (input: ExpenseCreate) => {
       paid: input.paid,
       userId: input.userId
     }
-
   })
   return updated
 }

@@ -23,7 +23,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!user) return redirect('/auth/login')
   const userId = user.id
   const incomes = await getUserCurrentMonthIncomes({ id: user.id })
-  const { expenses, expenseMonthlyTotal,totalsByExpenseType} = await getUserCurrentMonthExpenses({ id: user.id })
+  const { expenses, expenseMonthlyTotal, totalsByExpenseType } =
+    await getUserCurrentMonthExpenses({ id: user.id })
   const { now, then } = await dateRange()
 
 
@@ -32,10 +33,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function DashBoardRoute() {
   const data = useLoaderData<typeof loader>()
+
   const incomeSubTOtal = data.incomes.reduce(
     (acc: number, income: { amount: number }) => acc + income.amount,
     0
+
+
   )
+
+  console.log('iSub', incomeSubTOtal);
 
   const expenseScale = chroma.scale(['yellow', 'red', 'black'])
 

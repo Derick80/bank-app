@@ -11,7 +11,12 @@ import { useState } from 'react'
 import invariant from 'tiny-invariant'
 import { Dialog } from '~/components/shared/dialog'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
-import { EQuery, ExpenseQuery, getExpense, updateExpense } from '~/utils/expenses.server'
+import {
+  EQuery,
+  ExpenseQuery,
+  getExpense,
+  updateExpense
+} from '~/utils/expenses.server'
 import Edit from '../../incomes/$iid/edit'
 import { Frequency } from '.prisma/client'
 
@@ -42,7 +47,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const frequency = formData.get('frequency')
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
-  const paid =  formData.get('paid')
+  const paid = formData.get('paid')
   const isPaid = paid ? true : false
 
   if (
@@ -55,34 +60,33 @@ export const action: ActionFunction = async ({ request, params }) => {
     return new Response('Invalid form data', { status: 400 })
   }
 
-
-const updated = await updateExpense({
-  description: description,
-  accountNameId: accountNameId,
-  amount: amount,
-  due_date: due_date,
-  type: type,
-  frequency: frequency,
-  recurring: recurring,
-  paid: isPaid,
-  userId: user.id,
-  expenseId: expenseId
-
-})
+  const updated = await updateExpense({
+    description: description,
+    accountNameId: accountNameId,
+    amount: amount,
+    due_date: due_date,
+    type: type,
+    frequency: frequency,
+    recurring: recurring,
+    paid: isPaid,
+    userId: user.id,
+    expenseId: expenseId
+  })
   return redirect(`/dashboard`)
 }
 
 export default function EditExpense() {
   const data = useLoaderData<typeof loader>()
   const [isOpen, setIsOpen] = useState(true)
-
+  const navigate = useNavigate()
+  const handleCLosing = () => {
+    setIsOpen(false)
+    navigate('/dashboard')
+  }
   return (
     <>
-      <Dialog isOpen={isOpen} handleClose={() => setIsOpen(false)}>
-        <Edit data={data} type="expenses"
 
-        />
-      </Dialog>
-    </>
+        <Edit data={data} type='expenses' />
+      </>
   )
 }

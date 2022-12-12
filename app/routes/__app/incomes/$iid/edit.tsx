@@ -1,5 +1,5 @@
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
-import { Form, useLoaderData } from '@remix-run/react'
+import { Form, useLoaderData, useNavigate } from '@remix-run/react'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import invariant from 'tiny-invariant'
@@ -9,6 +9,7 @@ import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { getExpense, updateExpense } from '~/utils/expenses.server'
 import { getIncome, IncomeQuery, updateIncome } from '~/utils/incomes.server'
 import { useUser } from '~/utils/utils'
+import { validateNumber } from '~/utils/validators.server'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
@@ -18,7 +19,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const income = await getIncome(idToGet)
   const expenses = await getExpense(idToGet)
 
-
   return json(income)
 }
 
@@ -26,7 +26,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
   invariant(user, 'User Required')
   const formData = await request.formData()
-  const action = formData.get("_action");
+  const action = formData.get('_action')
 
   const description = formData.get('description')
   const amount = Number(formData.get('amount'))
@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
   const paid = Boolean(formData.get('paid'))
-let accountNameId = formData.get('accountNameId') as string
+  let accountNameId = formData.get('accountNameId') as string
 
   if (
     typeof description !== 'string' ||
@@ -47,6 +47,10 @@ let accountNameId = formData.get('accountNameId') as string
     typeof frequency !== 'string'
   ) {
     return new Response('Invalid form data', { status: 400 })
+  }
+
+  const errors = {
+    amount: validateNumber(amount as number)
   }
 
   const fields = {
@@ -59,49 +63,52 @@ let accountNameId = formData.get('accountNameId') as string
     paid,
     incomeId: params.iid
   }
-switch (action){
-  case "updateIncomes":
-    await updateIncome({
-      description: fields.description,
-      amount: fields.amount,
-      due_date: fields.due_date,
-      type: fields.type,
-      frequency: fields.frequency,
-      recurring: fields.recurring,
-      paid: fields.paid,
-      userId: user.id,
-      incomeId: params.iid
+  switch (action) {
+    case 'updateIncomes':
+      await updateIncome({
+        description: fields.description,
+        amount: fields.amount,
+        due_date: fields.due_date,
+        type: fields.type,
+        frequency: fields.frequency,
+        recurring: fields.recurring,
+        paid: fields.paid,
+        userId: user.id,
+        incomeId: params.iid
+      })
+      return redirect(`/dashboard`)
 
-    })
-    return redirect(`/dashboard`)
+    case 'updateExpenses':
+      await updateExpense({
+        description: description,
+        accountNameId: accountNameId,
+        amount: amount,
+        due_date: due_date,
+        type: type,
+        frequency: frequency,
+        recurring: recurring,
+        paid: paid,
+        userId: user.id,
+        expenseId: params.iid
+      })
+      return redirect(`/dashboard`)
+  }
 
-    case "updateExpenses":
-    await updateExpense({
-      description: description,
-      accountNameId: accountNameId,
-      amount: amount,
-      due_date: due_date,
-      type: type,
-      frequency: frequency,
-      recurring: recurring,
-      paid: paid,
-      userId: user.id,
-      expenseId: params.iid
-    })
-    return redirect(`/dashboard`)
-}
-
-return json({ error: 'Invalid action' }, { status: 400 })
-
+  return json({ error: 'Invalid action' }, { status: 400 })
 }
 
 export default function EditIncome() {
   const data = useLoaderData<typeof loader>() as IncomeQuery
   const [isOpen, setIsOpen] = useState(true)
+  const navigate = useNavigate()
 
+  const handleCLosing = () => {
+    setIsOpen(false)
+    navigate('/dashboard')
+  }
   return (
     <>
-      <Dialog isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+      <Dialog isOpen={true} handleClose={() => handleCLosing()}>
         <Edit data={data} type='incomes' />
       </Dialog>
     </>

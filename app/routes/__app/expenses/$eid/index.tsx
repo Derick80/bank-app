@@ -9,7 +9,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
   if (!user) return redirect('/login')
   const expenseId = params.eid
-  console.log('expenseId', expenseId);
+  console.log('expenseId', expenseId)
 
   invariant(expenseId, 'Expense ID Required')
   const userId = user.id

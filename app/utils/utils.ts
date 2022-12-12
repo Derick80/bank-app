@@ -52,7 +52,7 @@ function isUser(user: any): user is UserType {
   return user && typeof user === 'object' && typeof user.email === 'string'
 }
 
-export  function useOptionalUser(): UserType | undefined {
+export function useOptionalUser(): UserType | undefined {
   const data = useMatchesData('root')
   if (!data || !isUser(data.user)) {
     return undefined
