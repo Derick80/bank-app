@@ -11,11 +11,7 @@ import { useState } from 'react'
 import invariant from 'tiny-invariant'
 import { Dialog } from '~/components/shared/dialog'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
-import {
-  EQuery,
-  ExpenseQuery,
-  getExpense,
-} from '~/utils/expenses.server'
+import { EQuery, ExpenseQuery, getExpense } from '~/utils/expenses.server'
 import Edit from '../../incomes/$iid/edit'
 import { Frequency } from '.prisma/client'
 
@@ -69,9 +65,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     id: params.eid
   }
 
-  const expense = await ({
+  const expense = await {
     ...fields
-  })
+  }
 
   return redirect(`/dashboard/expenses/${expense.id}`)
 }

@@ -16,7 +16,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(data)
 }
 
-
 export default function IncomesRoute() {
   const data = useLoaderData<typeof loader>()
 
@@ -28,11 +27,9 @@ export default function IncomesRoute() {
           <h1 className='text-2xl'>Income</h1>
           {data.incomes.map((income: IncomeQuery) => (
             <>
-              <Content data={ income } type='incomes' preview={ false } showEdit />
+              <Content data={income} type='incomes' preview={false} showEdit />
             </>
           ))}
-
-
         </div>
       </div>
     </>

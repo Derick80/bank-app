@@ -3,9 +3,9 @@ import { SerializeFrom } from '@remix-run/node'
 import { dateRange } from './date-functions.server'
 import { prisma } from './prisma.server'
 
-
 export type EQuery = SerializeFrom<Expense>
-export type ExpenseQuery = Omit<Expense, 'createdAt' | 'updatedAt'> & SerializeFrom<Expense>
+export type ExpenseQuery = Omit<Expense, 'createdAt' | 'updatedAt'> &
+  SerializeFrom<Expense>
 
 export type ExpenseCreate = Omit<Expense, 'createdAt' | 'updatedAt' | 'id'> & {
   userId: string
@@ -24,7 +24,7 @@ const pickExpense = {
   userId: true
 }
 
-export const getAllUserExpenses = async (userId:string) => {
+export const getAllUserExpenses = async (userId: string) => {
   return await prisma.expense.findMany({
     where: {
       userId: userId
@@ -75,41 +75,37 @@ export const getUserExpensesByMonth = async (
 export const getExpense = async (expenseId: string) => {
   return await prisma.expense.findUnique({
     where: {
-      id: expenseId,
-
-    },
-
+      id: expenseId
+    }
   })
 }
 
-
-export const deleteExpense = async(input: Prisma.ExpenseWhereUniqueInput) => {
+export const deleteExpense = async (input: Prisma.ExpenseWhereUniqueInput) => {
   const deleted = await prisma.expense.delete({
-    where: {id: input.id}
-
+    where: { id: input.id }
   })
   return deleted
 }
-export const deletedExpense = async(input: Prisma.IncomeWhereUniqueInput) => {
-  const deleted: Expense = await prisma.expense.findUnique({
-    where: {id: input.id},
-  }).then(()=> prisma.deletedExpense.create({
-    data: {
-      ...deleted,
-      deletedAt: new Date().toISOString()
-
-    },
-  }
-    ).then(() => prisma.expense.delete({
-    where: {id: input.id}
-  }))
-  )
-
+export const deletedExpense = async (input: Prisma.IncomeWhereUniqueInput) => {
+  const deleted: Expense = await prisma.expense
+    .findUnique({
+      where: { id: input.id }
+    })
+    .then(() =>
+      prisma.deletedExpense
+        .create({
+          data: {
+            ...deleted,
+            deletedAt: new Date().toISOString()
+          }
+        })
+        .then(() =>
+          prisma.expense.delete({
+            where: { id: input.id }
+          })
+        )
+    )
 }
-
-
-
-
 
 // const toBeTrashed = await prisma.expense.findUnique({
 //     where: {id: input.id},

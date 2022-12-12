@@ -4,7 +4,7 @@ import ColorMode from '../color-mode'
 export default function Footer() {
   const [theme, setTheme] = useTheme()
 
-  function toggleTheme () {
+  function toggleTheme() {
     setTheme((prevTheme: any) =>
       prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
     )
@@ -12,14 +12,9 @@ export default function Footer() {
     console.log('theme', theme)
   }
   return (
-    <footer className='sticky flex w-full justify-around space-x-4 pb-2 md:space-x-8 border-2'>
-      <ul
-      className='flex flex-row items-center'
-      >
-        <li
-
-
-        >
+    <footer className='sticky flex w-full justify-around space-x-4 border-2 pb-2 md:space-x-8'>
+      <ul className='flex flex-row items-center'>
+        <li>
           <a
             href='https://www.linkedin.com/in/dhoskinson'
             className='social'
@@ -66,11 +61,10 @@ export default function Footer() {
       </ul>
       <ul>
         <ColorMode
-          onThemedChange={ toggleTheme }
-          currentTheme={ theme }
+          onThemedChange={toggleTheme}
+          currentTheme={theme}
           className=''
         />
-
       </ul>
     </footer>
   )

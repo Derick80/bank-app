@@ -14,32 +14,33 @@ export const loader: LoaderFunction = async ({ request }) => {
   const data = {
     expenses
   }
-  return json(data )
+  return json(data)
 }
 
 export default function ExpensesRoute() {
   const data = useLoaderData<typeof loader>()
 
-
-
-
-console.log('data', data);
+  console.log('data', data)
 
   return (
     <>
-     <h1 className='text-2xl font-semibold'>Welcome to My Expenses</h1>
+      <h1 className='text-2xl font-semibold'>Welcome to My Expenses</h1>
       <div className='flex w-full justify-around p-2'>
         <div>
           <h1 className='text-2xl'>Expenses</h1>
-         {data.expenses.map((expense: ExpenseQuery) => (
-          <>
-             <Content data={ expense } type='expenses' preview={ false } showEdit />
-          </>
-         ))
-         }
+          {data.expenses.map((expense: ExpenseQuery) => (
+            <>
+              <Content
+                data={expense}
+                type='expenses'
+                preview={false}
+                showEdit
+              />
+            </>
+          ))}
         </div>
       </div>
-     </>
+    </>
   )
 }
 
