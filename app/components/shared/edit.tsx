@@ -12,11 +12,12 @@ type Concrete<Type> = {
   [Property in keyof Type]: Type[Property]
 }
 type EditProps = {
-  data: IncomeQuery | ExpenseQuery
-  type: 'expenses' | 'incomes'
+  data:ExpenseQuery
+  type: 'incomes' | 'expenses'
 }
 export const Edit = ({ data, type }: EditProps) => {
   const user = useUser()
+
 
   const [formData, setFormData] = useState({
     description: data.description || '',
@@ -52,7 +53,7 @@ export const Edit = ({ data, type }: EditProps) => {
     <>
       <Form
         method='post'
-        action={`/dashboard/${type}/${data.id}/edit`}
+
         className='form-primary'
       >
         <input
@@ -70,14 +71,14 @@ export const Edit = ({ data, type }: EditProps) => {
           defaultValue={data.description}
           onChange={(event) => handleInputChange(event, 'description')}
         />
-        {type !== 'incomes' && (
+        {data.accountNameId && (
           <>
             <label htmlFor='accountNameId'>Account Name</label>
             <input
               type='text'
               name='accountNameId'
               className='form-field-primary'
-              defaultValue={data.accountNameId}
+              defaultValue={ data.accountNameId }
               onChange={(event) => handleInputChange(event, 'accountNameId')}
             />
           </>
@@ -102,16 +103,50 @@ export const Edit = ({ data, type }: EditProps) => {
         />
 
         <label htmlFor='type'>Type</label>
-        <select
-          name='type'
-          className='form-field-primary'
-          defaultValue={data.type}
-          onChange={(event) => handleInputChange(event, 'type')}
-        >
-          <option value='Payroll Income'>Payroll</option>
-          <option value='Rental Income'>Rental Income</option>
-          <option value='Other Income'>Other</option>
-        </select>
+      { type !== 'incomes' ? (
+        <>
+
+            <select
+              name='type'
+              className='form-field-primary'
+              defaultValue={ data.type }
+              onChange={ (event) => handleInputChange(event, 'type') }
+            >
+              <option value='Payroll Income'>Payroll</option>
+              <option value='Rental Income'>Rental Income</option>
+              <option value='Other Income'>Other</option>
+            </select>
+        </>
+      ):(
+        <>
+              <label htmlFor='accountNameId'>Account Name</label>
+              <input
+                type='text'
+                name='accountNameId'
+                className='form-field-primary'
+                defaultValue={ data.accountNameId }
+                onChange={ (event) => handleInputChange(event, 'accountNameId') }
+              />
+              <select
+                name='type'
+                className='form-field-primary'
+                defaultValue={ data.type }
+                onChange={ (event) => handleInputChange(event, 'type') }
+              >
+                <option value='Mortgage'>Mortgage</option>
+                <option value='Student Loan'>Student Loan</option>
+                <option value='Utilities'>Utilities</option>
+              <option
+              value='Auto'>Auto</option>
+              <option value='Credit Card'>Credit Card</option>
+              <option
+              value='Monthly Subscription'>Monthly Subscription</option>
+              <option
+              value='Grocery'>Grocery</option>
+
+              </select>
+        </>
+      )}
 
         <label htmlFor='frequency'>Frequency</label>
         <select
@@ -142,7 +177,22 @@ export const Edit = ({ data, type }: EditProps) => {
           onChange={(event) => handleCheckboxChange(event)}
         />
 
-        <button type='submit'>Submit</button>
+      <div
+        className='flex justify-center items-center'
+      >
+        <button type='submit'
+          name='_action' value='updateExpenses'
+
+        className='btn-base btn-outline'>
+          Update Expense
+        </button>
+        <button type='submit'
+          name='_action' value='updateIncomes'
+          className='btn-base btn-solid'>
+          Update Income
+        </button>
+
+      </div>
       </Form>
     </>
   )

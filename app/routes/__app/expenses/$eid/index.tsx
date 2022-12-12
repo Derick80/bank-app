@@ -9,6 +9,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
   if (!user) return redirect('/login')
   const expenseId = params.eid
+  console.log('expenseId', expenseId);
+
   invariant(expenseId, 'Expense ID Required')
   const userId = user.id
   const expenses = await getExpense(expenseId)
@@ -21,14 +23,15 @@ export default function ExpensesRoute() {
 
   return (
     <>
-      <h1 className='text-2xl font-semibold'>Welcome to My Income</h1>
+      <h1 className='text-2xl font-semibold'>Welcome to My Ex</h1>
       <div className='flex w-full justify-around p-2'>
         <div>
-          <h1 className='text-2xl'>Income</h1>
+          <h1 className='text-2xl'>Ex</h1>
           <Content
             data={data.expenses}
-            type='expenses'
+            type={'expenses'}
             preview={false}
+            showMore
             showEdit
           />
         </div>

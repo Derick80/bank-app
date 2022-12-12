@@ -84,6 +84,30 @@ function useTheme() {
   }
   return context
 }
+function Themed({
+  dark,
+  light,
+  initialOnly = false
+}:{
+  dark: React.ReactNode | string
+  light: React.ReactNode | string
+  initialOnly?: boolean
+}){
+  const [theme] =useTheme()
+  const [initialTheme] = React.useState(theme)
+  const themeToReference = initialOnly ? initialTheme : theme
+  const serverRenderWithUnknownTheme = !theme && typeof window !== 'object'
+  if (serverRenderWithUnknownTheme) {
+    return(
+      <>
+      {React.createElement('dark-mode',null, dark)}
+      {React.createElement('light-mode',null, light)}
+      </>
+    )
+}else{
+  return <>{themeToReference === 'light' ? light: dark}</>
+}
+}
 
 const clientThemeCode = `
 ;(() => {
@@ -134,4 +158,4 @@ function isTheme(value: unknown): value is Theme {
   return typeof value === 'string' && themes.includes(value as Theme)
 }
 
-export { Theme, ThemeProvider, useTheme, NonFlashOfWrongThemeEls, isTheme }
+export { Theme, ThemeProvider, useTheme,Themed, NonFlashOfWrongThemeEls, isTheme }

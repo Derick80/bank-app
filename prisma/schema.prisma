@@ -24,6 +24,7 @@ model User {
   expenses  Expense[]
   deletedExpenses DeletedExpense[]
   profile  Profile?
+  preferences Preferences?
 }
 model Token {
   id        String    @id @default(cuid())
@@ -52,6 +53,14 @@ model Account {
   user   User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   @@unique([provider, providerAccountId])
   @@index([userId])
+}
+model Preferences {
+  id        String    @id @unique @default(uuid())
+  dailyEmails Boolean @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @unique
 }
 model Profile {
   id        String    @id @unique @default(uuid())

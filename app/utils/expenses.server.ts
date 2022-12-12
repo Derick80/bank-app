@@ -1,4 +1,4 @@
-import { Expense, Prisma } from '@prisma/client'
+import { Expense, Income, Prisma } from '@prisma/client'
 import { SerializeFrom } from '@remix-run/node'
 import { dateRange } from './date-functions.server'
 import { prisma } from './prisma.server'
@@ -21,6 +21,7 @@ const pickExpense = {
   type: true,
   frequency: true,
   recurring: true,
+  paid: true,
   userId: true
 }
 
@@ -37,7 +38,7 @@ export const getUserCurrentMonthExpenses = async (
 ) => {
   const { now, then } = dateRange()
 
-  const data = await prisma.expense.findMany({
+  const expenses = await prisma.expense.findMany({
     where: {
       userId: user.id,
       due_date: {
@@ -47,12 +48,12 @@ export const getUserCurrentMonthExpenses = async (
     },
     select: pickExpense
   })
-  const subTotal = data.reduce((acc, cur) => acc + cur.amount, 0)
-  const subTotalByType = data.reduce((acc, cur) => {
+  const expenseMonthlyTotal = expenses.reduce((acc, cur) => acc + cur.amount, 0)
+  const totalsByExpenseType = expenses.reduce((acc, cur) => {
     acc[cur.type] = acc[cur.type] ? acc[cur.type] + cur.amount : cur.amount
     return acc
   }, {})
-  return { data, subTotal, subTotalByType }
+  return { expenses, expenseMonthlyTotal, totalsByExpenseType }
 }
 
 export const getUserExpensesByMonth = async (
@@ -71,6 +72,8 @@ export const getUserExpensesByMonth = async (
     select: pickExpense
   })
 }
+
+
 
 export const getExpense = async (expenseId: string) => {
   return await prisma.expense.findUnique({
@@ -105,6 +108,26 @@ export const deletedExpense = async (input: Prisma.IncomeWhereUniqueInput) => {
           })
         )
     )
+}
+
+export const updateExpense = async (input: ExpenseCreate) => {
+
+  const updated = await prisma.expense.update({
+    where: { id: input.expenseId },
+    data: {
+      description: input.description,
+      accountNameId: input.accountNameId,
+      amount: input.amount,
+      due_date: input.due_date,
+      type: input.type,
+      frequency: input.frequency,
+      recurring: input.recurring,
+      paid: input.paid,
+      userId: input.userId
+    }
+
+  })
+  return updated
 }
 
 // const toBeTrashed = await prisma.expense.findUnique({

@@ -23,23 +23,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (!user) return redirect('/auth/login')
   const userId = user.id
   const incomes = await getUserCurrentMonthIncomes({ id: user.id })
-
+  const { expenses, expenseMonthlyTotal,totalsByExpenseType} = await getUserCurrentMonthExpenses({ id: user.id })
   const { now, then } = await dateRange()
-  const results = await getUserExpensesByMonth(userId, now, then)
-  const totalsByType = results.reduce(
-    (acc: { [key: string]: number }, expense) => {
-      if (acc[expense.type]) {
-        acc[expense.type] += expense.amount
-      } else {
-        acc[expense.type] = expense.amount
-      }
-      return acc
-    },
-    {}
-  )
-  console.log('totalsByType', totalsByType)
 
-  return json({ incomes, results, totalsByType })
+
+  return json({ incomes, expenses, expenseMonthlyTotal })
 }
 
 export default function DashBoardRoute() {
@@ -48,15 +36,12 @@ export default function DashBoardRoute() {
     (acc: number, income: { amount: number }) => acc + income.amount,
     0
   )
-  const expenseSubTotal = data.results.reduce(
-    (acc: number, expense: { amount: number }) => acc + expense.amount,
-    0
-  )
+
   const expenseScale = chroma.scale(['yellow', 'red', 'black'])
 
-  const subTotal = data.results.map(
+  const subTotal = data.expenses.map(
     (expense: { type: string; amount: number; lengths: number }) => {
-      const percentage = Number(expense.amount / expenseSubTotal)
+      const percentage = Number(expense.amount / data.expenseMonthlyTotal)
       return {
         id: expense.type,
         percent: Number((percentage * 100).toFixed(0)),
@@ -122,10 +107,10 @@ export default function DashBoardRoute() {
           </div>
           <div>
             <p className='font-Eczar text-3xl font-normal underline decoration-red-700 underline-offset-8 md:text-5xl'>
-              ${expenseSubTotal}
+              ${data.expenseMonthlyTotal}
             </p>
           </div>
-          {data.results.map((expense: Expense) => (
+          {data.expenses.map((expense: Expense) => (
             <Content
               key={expense.id}
               data={expense}

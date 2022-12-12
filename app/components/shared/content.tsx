@@ -1,12 +1,12 @@
-import { Link } from '@remix-run/react'
+import { Form, Link } from '@remix-run/react'
 import { format } from 'date-fns'
 import type { ExpenseQuery } from '~/utils/expenses.server'
 import type { IncomeQuery } from '~/utils/incomes.server'
-import { MoreButton } from './more-button'
+import { useOptionalUser } from '~/utils/utils'
 
 type ContentProps = {
   data: IncomeQuery | ExpenseQuery
-  type: 'incomes' | 'expenses'
+  type: string
   preview: boolean
   showEdit: boolean
   showMore?: boolean
@@ -14,11 +14,14 @@ type ContentProps = {
 
 export const Content = ({
   data,
-  type,
   preview,
   showEdit,
+  type,
   showMore = false
 }: ContentProps) => {
+  const user = useOptionalUser()
+  console.log('type', type);
+
   return (
     <>
       <div className='flex flex-row'>
@@ -40,9 +43,21 @@ export const Content = ({
         )}
       </div>
 
-      <div>
-        {showMore && <MoreButton data={data} type={type} />}
-        <div></div>
+        {showMore && user && (
+          <>
+            <div className='flex flex-row'>
+              <Form method='post' action={`/${type}/${data.id}/delete`}>
+                <button type='submit' className=''>
+                  <span className='material-symbols-outlined'>delete</span>{' '}
+                </button>
+              </Form>
+              <Link to={`/${type}/${data.id}/edit`}>
+                <span className='material-symbols-outlined'>edit</span>{' '}
+              </Link>
+            </div>
+          </>
+        )}
+        <div>
       </div>
     </>
   )

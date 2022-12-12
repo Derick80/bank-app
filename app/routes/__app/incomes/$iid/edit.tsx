@@ -6,18 +6,18 @@ import invariant from 'tiny-invariant'
 import { Dialog } from '~/components/shared/dialog'
 import { Edit } from '~/components/shared/edit'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
+import { getExpense, updateExpense } from '~/utils/expenses.server'
 import { getIncome, IncomeQuery, updateIncome } from '~/utils/incomes.server'
 import { useUser } from '~/utils/utils'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
   invariant(user, 'User Required')
-  const incomeId = params.iid
-  invariant(incomeId, 'Post ID Required')
-  const income = await getIncome(incomeId)
-  if (!income) {
-    return json({ error: 'Income not found' }, { status: 404 })
-  }
+  const idToGet = params.iid
+  invariant(idToGet, 'Post ID Required')
+  const income = await getIncome(idToGet)
+  const expenses = await getExpense(idToGet)
+
 
   return json(income)
 }
@@ -26,6 +26,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
   invariant(user, 'User Required')
   const formData = await request.formData()
+  const action = formData.get("_action");
+
   const description = formData.get('description')
   const amount = Number(formData.get('amount'))
   // @ts-ignore
@@ -36,6 +38,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
   const paid = Boolean(formData.get('paid'))
+let accountNameId = formData.get('accountNameId') as string
 
   if (
     typeof description !== 'string' ||
@@ -56,19 +59,40 @@ export const action: ActionFunction = async ({ request, params }) => {
     paid,
     incomeId: params.iid
   }
+switch (action){
+  case "updateIncomes":
+    await updateIncome({
+      description: fields.description,
+      amount: fields.amount,
+      due_date: fields.due_date,
+      type: fields.type,
+      frequency: fields.frequency,
+      recurring: fields.recurring,
+      paid: fields.paid,
+      userId: user.id,
+      incomeId: params.iid
 
-  const income = await updateIncome({
-    description: fields.description,
-    amount: fields.amount,
-    due_date: fields.due_date,
-    type: fields.type,
-    frequency: fields.frequency,
-    recurring: fields.recurring,
-    paid: fields.paid,
-    userId: user.id,
-    incomeId: fields.incomeId
-  })
-  return redirect(`/dashboard`)
+    })
+    return redirect(`/dashboard`)
+
+    case "updateExpenses":
+    await updateExpense({
+      description: description,
+      accountNameId: accountNameId,
+      amount: amount,
+      due_date: due_date,
+      type: type,
+      frequency: frequency,
+      recurring: recurring,
+      paid: paid,
+      userId: user.id,
+      expenseId: params.iid
+    })
+    return redirect(`/dashboard`)
+}
+
+return json({ error: 'Invalid action' }, { status: 400 })
+
 }
 
 export default function EditIncome() {
