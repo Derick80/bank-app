@@ -1,14 +1,13 @@
-import { LoaderFunction, redirect, json } from '@remix-run/node'
+import { LoaderFunction, redirect, json, LoaderArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import { Content } from '~/components/shared/content'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { getExpense } from '~/utils/expenses.server'
-
-export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await isAuthenticated(request)
+export async function loader(args: LoaderArgs) {
+  const user = await isAuthenticated(args.request)
   if (!user) return redirect('/login')
-  const expenseId = params.eid
+  const expenseId = args.params.eid
   console.log('expenseId', expenseId)
 
   invariant(expenseId, 'Expense ID Required')

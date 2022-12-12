@@ -1,5 +1,6 @@
 import {
   ActionFunction,
+  LoaderArgs,
   LoaderFunction,
   MetaFunction,
   redirect
@@ -19,9 +20,8 @@ export const meta: MetaFunction = () => {
     description: 'Login to your account'
   }
 }
-
-export const loader: LoaderFunction = async ({ request }) => {
-  return (await isAuthenticated(request)) ? redirect('/') : null
+export async function loader(args: LoaderArgs) {
+  return (await isAuthenticated(args.request)) ? redirect('/') : null
 }
 export const action: ActionFunction = async ({ request }) => {
   try {

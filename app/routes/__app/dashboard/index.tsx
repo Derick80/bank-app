@@ -1,5 +1,5 @@
 import type { Expense, Income } from '@prisma/client'
-import type { LoaderFunction } from '@remix-run/node'
+import type { LoaderArgs, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import chroma from 'chroma-js'
@@ -14,74 +14,63 @@ import { getUserCurrentMonthExpenses } from '~/utils/expenses.server'
 import type { IncomeQuery } from '~/utils/incomes.server'
 import { getUserCurrentMonthIncomes } from '~/utils/incomes.server'
 
-type LoaderData = {
-  incomes: IncomeQuery[]
-  expenses: ExpenseQuery[]
-}
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await isAuthenticated(request)
+export async function loader(args: LoaderArgs) {
+  const user = await isAuthenticated(args.request)
   if (!user) return redirect('/login')
   const userId = user.id
   const incomes = await getUserCurrentMonthIncomes({ id: user.id })
-
+  const incomesByTypeTotal = await totalAndGroupByType(incomes)
   const { now, then } = await dateRange()
-  const results = await getUserExpensesByMonth(userId, now, then)
-  const totalsByType = results.reduce(
-    (acc: { [key: string]: number }, expense) => {
-      if (acc[expense.type]) {
-        acc[expense.type] += expense.amount
-      } else {
-        acc[expense.type] = expense.amount
-      }
-      return acc
-    },
-    {}
-  )
-  console.log('totalsByType', totalsByType)
+  const bills = await getUserExpensesByMonth(userId, now, then)
 
-  return json({ incomes, results, totalsByType })
+  const expensesByTypeTotal = await totalAndGroupByType(bills)
+
+  const expenseScale = chroma.scale(['yellow', 'red', 'black'])
+
+  const incTotal = incomesByTypeTotal.reduce((accumulator, obj) => {
+    return accumulator + obj.amount
+  }, 0)
+
+  const exTotal = expensesByTypeTotal.reduce((accumulator, obj) => {
+    return accumulator + obj.amount
+  }, 0)
+
+  const exMapped = expensesByTypeTotal.map((item) => {
+    return {
+      id: item.type,
+      amount: item.amount,
+      percentage: Number((item.amount / exTotal) * 100).toFixed(2),
+      itemWidth: (item.amount / exTotal) * 100,
+      bgFill: expenseScale((item.amount / exTotal) * 100).css()
+    }
+  })
+  return json({
+    exTotal,
+    incomes,
+    exMapped,
+    incTotal,
+    incomesByTypeTotal,
+    bills,
+    expensesByTypeTotal
+  })
 }
 
 export default function DashBoardRoute() {
   const data = useLoaderData<typeof loader>()
-  const incomeSubTOtal = data.incomes.reduce(
-    (acc: number, income: { amount: number }) => acc + income.amount,
-    0
-  )
-  const expenseSubTotal = data.results.reduce(
-    (acc: number, expense: { amount: number }) => acc + expense.amount,
-    0
-  )
-  const expenseScale = chroma.scale(['yellow', 'red', 'black'])
-
-  const subTotal = data.results.map(
-    (expense: { type: string; amount: number; lengths: number }) => {
-      const percentage = Number(expense.amount / expenseSubTotal)
-      return {
-        id: expense.type,
-        percent: Number((percentage * 100).toFixed(0)),
-        fills: expenseScale(percentage).css()
-      }
-    }
-  )
-  console.log('subTotal', subTotal)
 
   return (
     <>
       <h1 className='text-2xl font-semibold'>Current Month Summary</h1>
       <BandContainer>
-        {subTotal.map(
-          (expense: { id: string; percent: number; fills: string }) => (
-            <BandChart
-              key={expense.id}
-              id={expense.id}
-              itemWidth={expense.percent}
-              percentage={expense.percent}
-              bgFill={expense.fills}
-            />
-          )
-        )}
+        {data.exMapped.map((item) => (
+          <BandChart
+            key={item.id}
+            id={item.id}
+            itemWidth={item.itemWidth}
+            percentage={item.percentage}
+            bgFill={item.bgFill}
+          />
+        ))}
       </BandContainer>
       <div className='flex-r flex w-full justify-around p-2'>band stuff</div>
       <div className='flex-r flex w-full justify-around p-2'>
@@ -94,10 +83,10 @@ export default function DashBoardRoute() {
           </div>
           <div>
             <p className='font-Eczar text-3xl font-normal underline decoration-red-700 underline-offset-8 md:text-5xl'>
-              ${incomeSubTOtal}
+              ${data.incTotal}
             </p>
           </div>
-          {data.incomes.map((income: Income) => (
+          {data.incomes.map((income) => (
             <>
               <Content
                 key={income.id}
@@ -123,10 +112,10 @@ export default function DashBoardRoute() {
           </div>
           <div>
             <p className='font-Eczar text-3xl font-normal underline decoration-red-700 underline-offset-8 md:text-5xl'>
-              ${expenseSubTotal}
+              ${data.exTotal}
             </p>
           </div>
-          {data.results.map((expense: Expense) => (
+          {data.bills.map((expense) => (
             <Content
               key={expense.id}
               data={expense}
@@ -141,3 +130,112 @@ export default function DashBoardRoute() {
     </>
   )
 }
+
+function sumByType(
+  array: {
+    [key: string]: number | string
+  }[]
+) {
+  const typeArray = array.map((item) => {
+    return {
+      type: item.type,
+      amount: item.amount,
+      label: item.type
+    }
+  })
+  const result = typeArray.reduce((acc: any, { type, amount, label }) => {
+    const index = acc.findIndex((item: any) => item.type === type)
+    if (index === -1) {
+      return [...acc, { type, amount, label }]
+    } else {
+      acc[index].amount += amount
+      return acc
+    }
+  }, [])
+  return result
+}
+
+export type GroupsByType = {
+  type: string
+  amount: number
+  label: string
+}[]
+
+function totalAndGroupByType(
+  array: {
+    type: string
+    amount: number
+  }[]
+): GroupsByType {
+  const data: GroupsByType = array
+    .map((item) => {
+      return {
+        type: item.type,
+        amount: item.amount,
+        label: item.type
+      }
+    })
+    .reduce(
+      (
+        acc: any,
+        singleton: { type: string; amount: number; label: string }
+      ) => {
+        const index = acc.findIndex((item: any) => item.type === singleton.type)
+        if (index === -1) {
+          return [...acc, singleton]
+        } else {
+          acc[index].amount += singleton.amount
+          return acc
+        }
+      },
+      []
+    )
+  return data as GroupsByType
+}
+
+// .reduce((accumulator: [
+//   {
+//     type: string,
+//     amount: number,
+//     label: string
+
+//   },
+//   { total: number }
+
+// ], currentValue: { type: string, amount: number, label: string }) => {
+
+//   const total = Number(accumulator['total'] += currentValue.amount)
+//   const percent = Number(((currentValue.amount / total)).toFixed(2))
+
+//   accumulator[currentValue.type] = {
+//     type: currentValue.type,
+//     amount: currentValue.amount,
+//     label: currentValue.label,
+
+//   }
+//   accumulator['total'] = Number(accumulator['total'] += currentValue.amount)
+
+//   return accumulator
+// }, { total: 0 })
+
+// const incomesToProcess = incomes.map((income: { type: string; amount: number }) => {
+//   return {
+//     type: income.type,
+//     amount: income.amount
+//   }
+// }).reduce((acc: any, income: { type: string; amount: number }) => {
+//   const index = acc.findIndex((item: { type: string; amount: number }) => item.type === income.type)
+//   if (index === -1) {
+//     acc.push(income)
+//   } else {
+//     acc[index].amount += income.amount
+//   }
+//   return acc
+// }, []).reduce((acc: any, income: { type: string; amount: number }) => {
+//   acc[income.type] = income.amount
+//   acc['total'] += income.amount
+//   return acc
+
+// }
+//   , { total: 0 }
+// )

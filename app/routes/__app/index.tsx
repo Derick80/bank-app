@@ -1,5 +1,5 @@
 import type { Expense, Income } from '@prisma/client'
-import type { LoaderFunction } from '@remix-run/node'
+import { LoaderArgs, LoaderFunction, SerializeFrom } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import chroma from 'chroma-js'
@@ -13,13 +13,10 @@ import { getUserCurrentMonthExpenses } from '~/utils/expenses.server'
 import type { IncomeQuery } from '~/utils/incomes.server'
 import { getUserCurrentMonthIncomes } from '~/utils/incomes.server'
 
-type LoaderData = {
-  incomes: IncomeQuery[]
-  expenses: ExpenseQuery[]
-}
+type LoaderData = SerializeFrom<typeof loader>
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await isAuthenticated(request)
+export async function loader(args: LoaderArgs) {
+  const user = await isAuthenticated(args.request)
   if (!user) return redirect('/auth/login')
   const userId = user.id
   const incomes = await getUserCurrentMonthIncomes({ id: user.id })
@@ -27,25 +24,23 @@ export const loader: LoaderFunction = async ({ request }) => {
     await getUserCurrentMonthExpenses({ id: user.id })
   const { now, then } = await dateRange()
 
-
-  return json({ incomes, expenses, expenseMonthlyTotal })
+  return json({ incomes, expenses, expenseMonthlyTotal, totalsByExpenseType })
 }
 
 export default function DashBoardRoute() {
   const data = useLoaderData<typeof loader>()
+  const incomes: LoaderData['incomes'] = data.incomes
 
   const incomeSubTOtal = data.incomes.reduce(
     (acc: number, income: { amount: number }) => acc + income.amount,
     0
-
-
   )
 
-  console.log('iSub', incomeSubTOtal);
+  console.log('iSub', incomeSubTOtal)
 
   const expenseScale = chroma.scale(['yellow', 'red', 'black'])
 
-  const subTotal = data.expenses.map(
+  const subTotal = data.totalsByExpenseType.map(
     (expense: { type: string; amount: number; lengths: number }) => {
       const percentage = Number(expense.amount / data.expenseMonthlyTotal)
       return {
@@ -87,7 +82,7 @@ export default function DashBoardRoute() {
               ${incomeSubTOtal}
             </p>
           </div>
-          {data.incomes.map((income: Income) => (
+          {data.incomes.map((income) => (
             <>
               <Content
                 key={income.id}
@@ -116,7 +111,7 @@ export default function DashBoardRoute() {
               ${data.expenseMonthlyTotal}
             </p>
           </div>
-          {data.expenses.map((expense: Expense) => (
+          {data.expenses.map((expense) => (
             <Content
               key={expense.id}
               data={expense}

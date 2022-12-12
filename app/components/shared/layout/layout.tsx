@@ -19,9 +19,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <SiteActions />
       </NavBar>
 
-      <main className='h-full w-full'>
-{children}
-      </main>
+      <main className='h-full w-full'>{children}</main>
     </>
   )
 }

@@ -1,26 +1,19 @@
-import { Props } from '@headlessui/react/dist/types'
-import { SerializeFrom } from '@remix-run/node'
 import { Form } from '@remix-run/react'
 import { format } from 'date-fns'
 import { useState } from 'react'
-import { ExpenseQuery } from '~/utils/expenses.server'
-import { IncomeQuery } from '~/utils/incomes.server'
+import type { ExpenseQuery } from '~/utils/expenses.server'
 import { useUser } from '~/utils/utils'
-import Slider from './toggleSwitch/slider'
 
-type Concrete<Type> = {
-  [Property in keyof Type]: Type[Property]
-}
 type EditProps = {
   data: ExpenseQuery
-  type: 'incomes' | 'expenses'
+  type: string
 }
 export const Edit = ({ data, type }: EditProps) => {
   const user = useUser()
 
   const [formData, setFormData] = useState({
     description: data.description || '',
-    accountNameId: data.accountNameId || '',
+    accountNameId: data.accountNameId,
     amount: data.amount || 0,
     due_date: data.due_date || '',
     type: data.type || '',
@@ -99,7 +92,7 @@ export const Edit = ({ data, type }: EditProps) => {
         />
 
         <label htmlFor='type'>Type</label>
-        {type !== 'incomes' ? (
+        {type !== 'expenses' ? (
           <>
             <select
               name='type'
@@ -114,14 +107,6 @@ export const Edit = ({ data, type }: EditProps) => {
           </>
         ) : (
           <>
-            <label htmlFor='accountNameId'>Account Name</label>
-            <input
-              type='text'
-              name='accountNameId'
-              className='form-field-primary'
-              defaultValue={data.accountNameId}
-              onChange={(event) => handleInputChange(event, 'accountNameId')}
-            />
             <select
               name='type'
               className='form-field-primary'

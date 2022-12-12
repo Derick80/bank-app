@@ -2,7 +2,7 @@ export interface BandChartProps {
   bgFill: string
   itemWidth: number
   id: string
-  percentage: number
+  percentage: number | string
 }
 
 export function BandChart({

@@ -1,10 +1,15 @@
-import type { ActionFunction, LoaderArgs } from '@remix-run/node'
+import type {
+  ActionFunction,
+  LoaderArgs,
+  LoaderFunction
+} from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { useActionData, useLoaderData, useNavigate } from '@remix-run/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 import { useState } from 'react'
 import invariant from 'tiny-invariant'
 import { Dialog } from '~/components/shared/dialog'
 import { Edit } from '~/components/shared/edit'
+import { Modal } from '~/components/shared/model'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { getExpense, updateExpense } from '~/utils/expenses.server'
 import type { IncomeQuery } from '~/utils/incomes.server'
@@ -22,7 +27,7 @@ export async function loader(args: LoaderArgs) {
   return json(income)
 }
 
-export async function action({ request, params }: LoaderArgs) {
+export const action: ActionFunction = async ({ request, params }) => {
   const user = await isAuthenticated(request)
   invariant(user, 'User Required')
   const formData = await request.formData()
@@ -99,18 +104,12 @@ export async function action({ request, params }: LoaderArgs) {
 
 export default function EditIncome() {
   const data = useLoaderData<typeof loader>() as IncomeQuery
-  const [isOpen, setIsOpen] = useState(true)
-  const navigate = useNavigate()
 
-  const handleCLosing = () => {
-    setIsOpen(false)
-    navigate('/dashboard')
-  }
   return (
     <>
-      <Dialog isOpen={true} handleClose={() => handleCLosing()}>
+      <Modal isOpen={true} className='w-2/3 p-10'>
         <Edit data={data} type='incomes' />
-      </Dialog>
+      </Modal>
     </>
   )
 }

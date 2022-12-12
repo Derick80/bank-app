@@ -1,17 +1,16 @@
-import { json, LoaderFunction } from '@remix-run/node'
+import type { LoaderArgs } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import { Content } from '~/components/shared/content'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
-import { getIncome, getUserIncomes } from '~/utils/incomes.server'
+import { getIncome } from '~/utils/incomes.server'
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  console.log('params', params)
-
-  const user = await isAuthenticated(request)
+export async function loader(args: LoaderArgs) {
+  const user = await isAuthenticated(args.request)
   invariant(user, 'User')
   const userId = user.id
-  const incomeId = params.iid
+  const incomeId = args.params.iid
   invariant(userId, 'User ID')
   invariant(incomeId, 'Income ID')
 

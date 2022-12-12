@@ -53,7 +53,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     paid: fields.paid,
     userId: user.id
   })
-  return redirect(`/dashboard/incomes/${income.id}`)
+  return redirect(`/incomes/${income.id}`)
 }
 
 export default function NewIncome() {
@@ -88,7 +88,7 @@ export default function NewIncome() {
       <div className='flex w-full justify-around p-2'>
         <div>
           <h1 className='text-2xl'>Income</h1>
-          <Form method='post'>
+          <Form method='post' className='form-primary'>
             <input
               type='hidden'
               name='userId'
@@ -99,6 +99,7 @@ export default function NewIncome() {
               <span>Description</span>
               <input
                 type='text'
+                className='form-field-primary'
                 name='description'
                 value={formData.description}
                 onChange={(e) => handleInputChange(e, 'description')}
@@ -109,6 +110,7 @@ export default function NewIncome() {
               <input
                 type='number'
                 name='amount'
+                className='form-field-primary'
                 value={formData.amount}
                 onChange={(e) => handleInputChange(e, 'amount')}
               />
@@ -118,6 +120,7 @@ export default function NewIncome() {
               <input
                 type='date'
                 name='due_date'
+                className='form-field-primary'
                 value={formData.due_date}
                 onChange={(e) => handleInputChange(e, 'due_date')}
               />
@@ -126,6 +129,7 @@ export default function NewIncome() {
               <span>Type</span>
               <select
                 name='type'
+                className='form-field-primary'
                 value={formData.type}
                 onChange={(e) => handleInputChange(e, 'type')}
               >
@@ -138,6 +142,7 @@ export default function NewIncome() {
               <span>Frequency</span>
               <select
                 name='frequency'
+                className='form-field-primary'
                 value={formData.frequency}
                 onChange={(e) => handleInputChange(e, 'frequency')}
               >
@@ -145,7 +150,6 @@ export default function NewIncome() {
                 <option value='WEEKLY'>Weekly</option>
                 <option value='MONTHLY'>Monthly</option>
                 <option value='YEARLY'>Yearly</option>
-                <option value='yearly'>Yearly</option>
               </select>
             </label>
             <label>

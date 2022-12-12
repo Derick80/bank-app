@@ -1,11 +1,13 @@
+import type { LoaderArgs } from '@remix-run/node'
 import { json, LoaderFunction, redirect } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { Content } from '~/components/shared/content'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
-import { getUserIncomes, IncomeQuery } from '~/utils/incomes.server'
+import type { IncomeQuery } from '~/utils/incomes.server'
+import { getUserIncomes } from '~/utils/incomes.server'
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const user = await isAuthenticated(request)
+export async function loader(args: LoaderArgs) {
+  const user = await isAuthenticated(args.request)
   if (!user) return redirect('/login')
   const userId = user.id
   const incomes = await getUserIncomes(userId)

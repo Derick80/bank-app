@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export function BandContainer({ children }: { children: ReactNode }) {
   return (

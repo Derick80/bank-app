@@ -1,29 +1,19 @@
-import { Expense } from '.prisma/client'
-import {
-  LoaderFunction,
-  json,
-  SerializeFrom,
-  ActionFunction,
-  redirect
-} from '@remix-run/node'
+import type { ActionFunction, LoaderArgs } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import { useState } from 'react'
 import invariant from 'tiny-invariant'
-import { Dialog } from '~/components/shared/dialog'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
-import {
-  EQuery,
-  ExpenseQuery,
-  getExpense,
-  updateExpense
-} from '~/utils/expenses.server'
+import type { frequencyType } from '~/utils/expenses.server'
+import { getExpense, updateExpense } from '~/utils/expenses.server'
 import Edit from '../../incomes/$iid/edit'
-import { Frequency } from '.prisma/client'
+import { Portal } from '~/components/shared/prtal'
+import { Modal } from '~/components/shared/model'
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  const user = await isAuthenticated(request)
+export async function loader(args: LoaderArgs) {
+  const user = await isAuthenticated(args.request)
   invariant(user, 'User Required')
-  const expenseId = params.eid
+  const expenseId = args.params.eid
   invariant(expenseId, 'Expense ID Required')
   const expense = await getExpense(expenseId)
   if (!expense) {
@@ -45,6 +35,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   let due_date = new Date(formData.get('due_date'))
   const type = formData.get('type')
   const frequency = formData.get('frequency')
+  invariant(frequency, 'Frequency')
+  const freq: frequencyType = frequency
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
   const paid = formData.get('paid')
@@ -66,7 +58,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     amount: amount,
     due_date: due_date,
     type: type,
-    frequency: frequency,
+    frequency: freq,
     recurring: recurring,
     paid: isPaid,
     userId: user.id,
@@ -77,16 +69,13 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function EditExpense() {
   const data = useLoaderData<typeof loader>()
-  const [isOpen, setIsOpen] = useState(true)
-  const navigate = useNavigate()
-  const handleCLosing = () => {
-    setIsOpen(false)
-    navigate('/dashboard')
-  }
+
   return (
     <>
-
+      +{' '}
+      <Modal isOpen={true} className='w-2/3 p-10'>
         <Edit data={data} type='expenses' />
-      </>
+      </Modal>
+    </>
   )
 }

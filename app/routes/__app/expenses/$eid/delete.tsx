@@ -1,10 +1,15 @@
-import { ActionFunction, LoaderFunction, redirect } from '@remix-run/node'
+import {
+  ActionFunction,
+  LoaderArgs,
+  LoaderFunction,
+  redirect
+} from '@remix-run/node'
 import { badRequest, notFound, serverError } from 'remix-utils'
 import invariant from 'tiny-invariant'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { deleteExpense } from '~/utils/expenses.server'
 
-export const loader: LoaderFunction = () => {
+export async function loader(args: LoaderArgs) {
   throw notFound({ message: 'Delete Not Found' })
 }
 
