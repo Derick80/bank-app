@@ -1,17 +1,11 @@
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { prisma } from './prisma.server'
 import type { Income } from '@prisma/client'
 import { dateRange } from './date-functions.server'
-import { SerializeFrom } from '@remix-run/node'
-export type IncomeQuery = Omit<Income, 'createdAt' | 'updatedAt'> &
-  SerializeFrom<Income>
+export type IncomeQuery = Omit<Income, 'createdAt' | 'updatedAt'>
 
-export type IncomeCreate = Omit<
-  Income,
-  'createdAt' | 'updatedAt' | 'frequency' | 'id'
-> & {
+export type IncomeCreate = Omit<Income, 'createdAt' | 'updatedAt' | 'id'> & {
   userId: string
-  frequency: string
   incomeId?: string
 }
 

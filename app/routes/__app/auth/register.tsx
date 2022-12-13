@@ -15,7 +15,7 @@ export const meta: MetaFunction = () => {
 export const action: ActionFunction = async ({ request }) => {
   try {
     return await authenticator.authenticate('register', request, {
-      successRedirect: '/'
+      successRedirect: '/dashboard'
     })
   } catch (error) {
     if (error instanceof Response) return error

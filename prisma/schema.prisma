@@ -81,7 +81,7 @@ model Income {
   updatedAt     DateTime  @default(now())
   due_date      DateTime
   type          String
-  frequency     Frequency @default(BIANNUALLY)
+  frequency     String
   recurring     Boolean   @default(true)
   paid          Boolean   @default(false)
   user          User      @relation(fields: [userId], references: [id])
@@ -97,7 +97,7 @@ model Expense {
   amount         Float
   due_date       DateTime
   type          String
-  frequency      Frequency  @default(MONTHLY)
+  frequency      String
   recurring      Boolean    @default(true)
   paid           Boolean    @default(false)
 
@@ -115,7 +115,7 @@ model DeletedExpense {
   amount         Float
   due_date       DateTime
   type          String
-  frequency      Frequency  @default(MONTHLY)
+  frequency     String
   recurring      Boolean    @default(true)
   paid           Boolean    @default(false)
 
@@ -131,12 +131,7 @@ enum Role {
   MEMBER
 }
 
-enum Frequency {
-  WEEKLY
-  MONTHLY
-  YEARLY
-  BIANNUALLY
-}
+
 enum TokenType {
   REFRESH_TOKEN
   VERIFY_EMAIL

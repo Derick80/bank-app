@@ -1,4 +1,5 @@
-import { ActionFunction, LoaderFunction, redirect } from '@remix-run/node'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import { badRequest, notFound, serverError } from 'remix-utils'
 import invariant from 'tiny-invariant'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'

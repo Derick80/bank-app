@@ -1,4 +1,5 @@
-import { LoaderFunction, redirect, json, LoaderArgs } from '@remix-run/node'
+import type { LoaderArgs } from '@remix-run/node'
+import { redirect, json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import { Content } from '~/components/shared/content'
@@ -11,7 +12,6 @@ export async function loader(args: LoaderArgs) {
   console.log('expenseId', expenseId)
 
   invariant(expenseId, 'Expense ID Required')
-  const userId = user.id
   const expenses = await getExpense(expenseId)
 
   return json({ expenses })

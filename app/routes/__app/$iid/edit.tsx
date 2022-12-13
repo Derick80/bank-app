@@ -1,20 +1,13 @@
-import type {
-  ActionFunction,
-  LoaderArgs,
-  LoaderFunction
-} from '@remix-run/node'
+import type { ActionFunction, LoaderArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { useLoaderData, useNavigate } from '@remix-run/react'
-import { useState } from 'react'
+import { useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
-import { Dialog } from '~/components/shared/dialog'
 import { Edit } from '~/components/shared/edit'
 import { Modal } from '~/components/shared/model'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
-import { getExpense, updateExpense } from '~/utils/expenses.server'
+import { updateExpense } from '~/utils/expenses.server'
 import type { IncomeQuery } from '~/utils/incomes.server'
 import { getIncome, updateIncome } from '~/utils/incomes.server'
-import { validateNumber } from '~/utils/validators.server'
 
 export async function loader(args: LoaderArgs) {
   const user = await isAuthenticated(args.request)
@@ -22,7 +15,6 @@ export async function loader(args: LoaderArgs) {
   const idToGet = args.params.iid
   invariant(idToGet, 'Post ID Required')
   const income = await getIncome(idToGet)
-  const expenses = await getExpense(idToGet)
 
   return json(income)
 }
@@ -52,10 +44,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     typeof frequency !== 'string'
   ) {
     return new Response('Invalid form data', { status: 400 })
-  }
-
-  const errors = {
-    amount: validateNumber(amount as number)
   }
 
   const fields = {

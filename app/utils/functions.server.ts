@@ -1,5 +1,5 @@
-import { ExpenseQuery } from './expenses.server'
-import { IncomeQuery } from './incomes.server'
+import type { ExpenseQuery } from './expenses.server'
+import type { IncomeQuery } from './incomes.server'
 
 export async function getTags(array: ExpenseQuery[] | IncomeQuery[]) {
   const tags = array.map((tag) => tag.type)

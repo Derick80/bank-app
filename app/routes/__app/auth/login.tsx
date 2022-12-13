@@ -1,10 +1,5 @@
-import {
-  ActionFunction,
-  LoaderArgs,
-  LoaderFunction,
-  MetaFunction,
-  redirect
-} from '@remix-run/node'
+import type { ActionFunction, LoaderArgs, MetaFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import { Form, Link } from '@remix-run/react'
 import { badRequest, serverError } from 'remix-utils'
 import { AuthForm } from '~/components/shared/auth/auth-form'
@@ -21,12 +16,12 @@ export const meta: MetaFunction = () => {
   }
 }
 export async function loader(args: LoaderArgs) {
-  return (await isAuthenticated(args.request)) ? redirect('/') : null
+  return (await isAuthenticated(args.request)) ? redirect('/dashboard') : null
 }
 export const action: ActionFunction = async ({ request }) => {
   try {
     return await authenticator.authenticate('login', request, {
-      successRedirect: '/'
+      successRedirect: '/dashboard'
     })
   } catch (error) {
     if (error instanceof Response) return error

@@ -11,7 +11,7 @@ type EditProps = {
 export const Edit = ({ data, type }: EditProps) => {
   const user = useUser()
 
-  const [formData, setFormData] = useState({
+  const [, setFormData] = useState({
     description: data.description || '',
     accountNameId: data.accountNameId,
     amount: data.amount || 0,

@@ -1,5 +1,5 @@
 // app/components/modal.tsx
-import { Portal } from './prtal'
+import { Portal } from './portal'
 import { useNavigate } from '@remix-run/react'
 
 interface props {
@@ -25,7 +25,7 @@ export const Modal: React.FC<props> = ({
         aria-labelledby={ariaLabel ?? 'modal-title'}
         role='dialog'
         aria-modal='true'
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/dashboard')}
       ></div>
       <div className='pointer-events-none fixed inset-0 flex max-h-screen items-center justify-center overflow-scroll'>
         <div

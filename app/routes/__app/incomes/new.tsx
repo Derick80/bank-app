@@ -1,4 +1,5 @@
-import { ActionFunction, redirect } from '@remix-run/node'
+import type { ActionFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import { Form } from '@remix-run/react'
 import { useState } from 'react'
 import invariant from 'tiny-invariant'

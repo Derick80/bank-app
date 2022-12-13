@@ -15,7 +15,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const data = useLoaderData<typeof loader>()
-  console.log('data', data)
 
   return (
     <article className='mx-auto flex flex-col'>

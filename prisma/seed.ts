@@ -37,97 +37,110 @@ async function seed() {
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2022-11-01'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2022-11-15'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2022-12-01'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2022-12-15'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2023-01-01'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2023-01-15'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2023-02-01'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
       {
         userId: user.id,
         description: 'Tempus Payroll',
         amount: 3000,
         due_date: new Date('2023-02-15'),
-        type: 'Payroll'
+        type: 'Payroll',
+        frequency:'Bianually',
       },
 
       {
         userId: user.id,
-        description: 'Rental Income',
+        description: 'Rental_Income',
         amount: 200,
         due_date: new Date('2022-11-01'),
-        frequency: 'MONTHLY',
-        type: 'Rental Income'
+
+        type: 'Rental_Income',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
-        description: 'Rental Income',
+        description: 'Rental_Income',
         amount: 200,
         due_date: new Date('2022-12-01'),
-        frequency: 'MONTHLY',
-        type: 'Rental Income'
+
+        type: 'Rental_Income',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
-        description: 'Rental Income',
+        description: 'Rental_Income',
         amount: 200,
         due_date: new Date('2023-01-01'),
-        frequency: 'MONTHLY',
-        type: 'Rental Income'
+
+        type: 'Rental_Income',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
-        description: 'Rental Income',
+        description: 'Rental_Income',
         amount: 200,
         due_date: new Date('2023-02-01'),
-        frequency: 'MONTHLY',
-        type: 'Rental Income'
+
+        type: 'Rental_Income',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
-        description: 'Rental Income',
+        description: 'Rental_Income',
         amount: 200,
         due_date: new Date('2023-03-01'),
-        frequency: 'MONTHLY',
-        type: 'Rental Income'
+
+        type: 'Rental_Income',
+        frequency: 'Monthly'
       }
     ]
   })
@@ -140,7 +153,8 @@ async function seed() {
         accountNameId: '2010',
         amount: 600,
         due_date: new Date('2022-11-15'),
-        type: 'Auto'
+        type: 'Auto',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -148,7 +162,8 @@ async function seed() {
         accountNameId: '2010',
         amount: 600,
         due_date: new Date('2022-12-15'),
-        type: 'Auto'
+        type: 'Auto',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -156,7 +171,8 @@ async function seed() {
         accountNameId: '2010',
         amount: 600,
         due_date: new Date('2022-01-15'),
-        type: 'Auto'
+        type: 'Auto',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -164,7 +180,8 @@ async function seed() {
         accountNameId: '2010',
         amount: 600,
         due_date: new Date('2022-02-15'),
-        type: 'Auto'
+        type: 'Auto',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -172,8 +189,9 @@ async function seed() {
         accountNameId: '9400',
         amount: 1500,
         due_date: new Date('2022-11-01'),
-        frequency: 'MONTHLY',
-        type: 'Mortgage'
+
+        type: 'Mortgage',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -181,8 +199,9 @@ async function seed() {
         accountNameId: '9400',
         amount: 1500,
         due_date: new Date('2022-12-01'),
-        frequency: 'MONTHLY',
-        type: 'Mortgage'
+
+        type: 'Mortgage',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -190,8 +209,9 @@ async function seed() {
         accountNameId: '9400',
         amount: 1500,
         due_date: new Date('2022-01-01'),
-        frequency: 'MONTHLY',
-        type: 'Mortgage'
+
+        type: 'Mortgage',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -199,8 +219,9 @@ async function seed() {
         accountNameId: '9400',
         amount: 1500,
         due_date: new Date('2022-02-01'),
-        frequency: 'MONTHLY',
-        type: 'Mortgage'
+
+        type: 'Mortgage',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -208,7 +229,8 @@ async function seed() {
         accountNameId: '2011',
         amount: 100,
         due_date: new Date('2022-11-27'),
-        type: 'Utilities'
+        type: 'Utilities',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -216,7 +238,8 @@ async function seed() {
         accountNameId: '2011',
         amount: 100,
         due_date: new Date('2022-12-27'),
-        type: 'Utilities'
+        type: 'Utilities',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -224,7 +247,8 @@ async function seed() {
         accountNameId: '2011',
         amount: 100,
         due_date: new Date('2022-01-27'),
-        type: 'Utilities'
+        type: 'Utilities',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -232,7 +256,8 @@ async function seed() {
         accountNameId: '2011',
         amount: 100,
         due_date: new Date('2022-02-27'),
-        type: 'Utilities'
+        type: 'Utilities',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -240,7 +265,8 @@ async function seed() {
         accountNameId: 'Food Expense',
         amount: 150,
         due_date: new Date('2022-11-18'),
-        type: 'Grocery'
+        type: 'Grocery',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -248,7 +274,8 @@ async function seed() {
         accountNameId: 'Food Expense',
         amount: 150,
         due_date: new Date('2022-12-18'),
-        type: 'Grocery'
+        type: 'Grocery',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -257,7 +284,8 @@ async function seed() {
         amount: 150,
 
         due_date: new Date('2022-01-18'),
-        type: 'Grocery'
+        type: 'Grocery',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -265,7 +293,8 @@ async function seed() {
         accountNameId: 'Food Expense',
         amount: 150,
         due_date: new Date('2022-02-18'),
-        type: 'Grocery'
+        type: 'Grocery',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -273,7 +302,8 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-11-27'),
-        type: `Student Loan`
+        type: `Student_Loan`,
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -281,7 +311,8 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-12-27'),
-        type: `Student Loan`
+        type: `Student_Loan`,
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -289,7 +320,8 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-01-27'),
-        type: `Student Loan`
+        type: `Student_Loan`,
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -297,7 +329,8 @@ async function seed() {
         accountNameId: 'AES1-3',
         amount: 350,
         due_date: new Date('2022-02-27'),
-        type: `Student Loan`
+        type: `Student_Loan`,
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -305,7 +338,8 @@ async function seed() {
         accountNameId: '7760',
         amount: 450,
         due_date: new Date('2022-11-15'),
-        type: 'Credit Card'
+        type: 'Credit_Card',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -313,7 +347,8 @@ async function seed() {
         accountNameId: '7760',
         amount: 450,
         due_date: new Date('2022-12-15'),
-        type: 'Credit Card'
+        type: 'Credit_Card',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -321,7 +356,8 @@ async function seed() {
         accountNameId: '7760',
         amount: 450,
         due_date: new Date('2022-01-15'),
-        type: 'Credit Card'
+        type: 'Credit_Card',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -329,7 +365,8 @@ async function seed() {
         accountNameId: '7760',
         amount: 450,
         due_date: new Date('2022-02-15'),
-        type: 'Credit Card'
+        type: 'Credit_Card',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -337,7 +374,8 @@ async function seed() {
         accountNameId: '9499',
         amount: 10.71,
         due_date: new Date('2022-11-09'),
-        type: 'Monthly Subscription Service'
+        type: 'Monthly_Subscription_Service',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -345,7 +383,8 @@ async function seed() {
         accountNameId: '9499',
         amount: 10.71,
         due_date: new Date('2022-12-09'),
-        type: 'Monthly Subscription Service'
+        type: 'Monthly_Subscription_Service',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -353,7 +392,8 @@ async function seed() {
         accountNameId: '9499',
         amount: 10.71,
         due_date: new Date('2022-01-09'),
-        type: 'Monthly Subscription Service'
+        type: 'Monthly_Subscription_Service',
+        frequency: 'Monthly'
       },
       {
         userId: user.id,
@@ -361,7 +401,8 @@ async function seed() {
         accountNameId: '9499',
         amount: 10.71,
         due_date: new Date('2022-02-09'),
-        type: 'Monthly Subscription Service'
+        type: 'Monthly_Subscription_Service',
+        frequency: 'Monthly'
       }
     ]
   })

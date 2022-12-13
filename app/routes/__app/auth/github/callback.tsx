@@ -3,7 +3,7 @@ import { authenticator } from '~/utils/auth/authenticator.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   return await authenticator.authenticate('github', request, {
-    successRedirect: '/',
+    successRedirect: '/dashboard',
     failureRedirect: '/auth/login'
   })
 }

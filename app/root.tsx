@@ -1,8 +1,4 @@
-import type {
-  LinksFunction,
-  LoaderFunction,
-  MetaFunction
-} from '@remix-run/node'
+import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -15,14 +11,12 @@ import {
 import { Layout } from './components/shared/layout/layout'
 import {
   NonFlashOfWrongThemeEls,
-  Theme,
   ThemeProvider,
   useTheme
 } from './lib/theme-provider'
 import styles from './styles/app.css'
 import { isAuthenticated } from './utils/auth/authenticator.server'
 import { getThemeSession } from './utils/theme.server'
-import { getUser } from './utils/users.server'
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: '私の銀行',
@@ -30,25 +24,11 @@ export const meta: MetaFunction = () => ({
 })
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
-export type LoaderData = {
-  user: {
-    id: string
-    userName: string
-    email: string
-  } | null
-  theme: Theme | null
-}
-
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: LoaderArgs) {
   const themeSession = await getThemeSession(request)
   const user = await isAuthenticated(request)
 
-  const data: LoaderData = {
-    user,
-    theme: themeSession.getTheme()
-  }
-
-  return data
+  return { user, theme: themeSession }
 }
 function LayoutWrapper() {
   return (
@@ -61,7 +41,7 @@ function LayoutWrapper() {
   )
 }
 function App() {
-  const data = useLoaderData<LoaderData>()
+  const data = useLoaderData<typeof loader>()
   const [theme] = useTheme()
 
   return (
@@ -79,7 +59,7 @@ function App() {
   )
 }
 export default function AppWithThemeProvider() {
-  const data = useLoaderData<LoaderData>()
+  const data = useLoaderData<typeof loader>()
   return (
     <ThemeProvider specifiedTheme={data.theme}>
       <App />

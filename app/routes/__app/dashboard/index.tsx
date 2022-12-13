@@ -1,17 +1,12 @@
-import type { Expense, Income } from '@prisma/client'
-import type { LoaderArgs, LoaderFunction } from '@remix-run/node'
+import type { LoaderArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import chroma from 'chroma-js'
-import LandingPage from '~/components/landing-page'
 import { BandChart, BandContainer } from '~/components/shared/band-chart'
 import { Content } from '~/components/shared/content'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { dateRange } from '~/utils/date-functions.server'
-import type { ExpenseQuery } from '~/utils/expenses.server'
 import { getUserExpensesByMonth } from '~/utils/expenses.server'
-import { getUserCurrentMonthExpenses } from '~/utils/expenses.server'
-import type { IncomeQuery } from '~/utils/incomes.server'
 import { getUserCurrentMonthIncomes } from '~/utils/incomes.server'
 
 export async function loader(args: LoaderArgs) {
@@ -41,9 +36,12 @@ export async function loader(args: LoaderArgs) {
       amount: item.amount,
       percentage: Number((item.amount / exTotal) * 100).toFixed(2),
       itemWidth: (item.amount / exTotal) * 100,
-      bgFill: expenseScale((item.amount / exTotal) * 100).css()
+      bgFill: expenseScale((item.amount / exTotal) * 100).hex()
     }
   })
+
+  console.log('exMapped', exMapped)
+
   return json({
     exTotal,
     incomes,
@@ -60,7 +58,7 @@ export default function DashBoardRoute() {
 
   return (
     <>
-      <h1 className='text-2xl font-semibold'>Current Month Summary</h1>
+      <h1 className='text-2xl font-semibold'>Current Month blalal Summary</h1>
       <BandContainer>
         {data.exMapped.map((item) => (
           <BandChart
@@ -131,6 +129,7 @@ export default function DashBoardRoute() {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function sumByType(
   array: {
     [key: string]: number | string

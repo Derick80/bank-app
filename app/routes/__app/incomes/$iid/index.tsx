@@ -14,8 +14,6 @@ export async function loader(args: LoaderArgs) {
   invariant(userId, 'User ID')
   invariant(incomeId, 'Income ID')
 
-  console.log('incomeId', incomeId)
-
   const income = await getIncome(incomeId)
 
   return json({ income })
