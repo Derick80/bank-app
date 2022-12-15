@@ -2,13 +2,14 @@ import { Form } from '@remix-run/react'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import type { ExpenseQuery } from '~/utils/expenses.server'
+import { IncomeExpense } from '~/utils/types.server'
 import { useUser } from '~/utils/utils'
 
 type EditProps = {
-  data: ExpenseQuery
-  type: string
+  data: IncomeExpense
+
 }
-export const Edit = ({ data, type }: EditProps) => {
+export const Edit = ({ data }: EditProps) => {
   const user = useUser()
 
   const [, setFormData] = useState({
@@ -19,7 +20,7 @@ export const Edit = ({ data, type }: EditProps) => {
     type: data.type || '',
     frequency: data.frequency || '',
     recurring: data.recurring || false,
-    paid: data.paid || true,
+    include: data.include || false,
     userId: user.id
   })
   const handleInputChange = (
@@ -92,7 +93,7 @@ export const Edit = ({ data, type }: EditProps) => {
         />
 
         <label htmlFor='type'>Type</label>
-        {type !== 'expenses' ? (
+        {data.accountNameId ? (
           <>
             <select
               name='type'
@@ -145,31 +146,41 @@ export const Edit = ({ data, type }: EditProps) => {
           onChange={(event) => handleInputChange(event, 'recurring')}
         />
 
-        <label htmlFor='paid'>Paid</label>
+        <label htmlFor='include'>include</label>
         <input
           type='checkbox'
-          name='paid'
-          checked={data.paid}
-          onChange={(event) => handleCheckboxChange(event)}
+          name='include'
+          checked={data.include}
+          onChange={(event) => handleInputChange(event, 'include')}
         />
 
         <div className='flex items-center justify-center'>
-          <button
-            type='submit'
-            name='_action'
-            value='updateExpenses'
-            className='btn-base btn-outline'
-          >
-            Update Expense
-          </button>
-          <button
-            type='submit'
-            name='_action'
-            value='updateIncomes'
-            className='btn-base btn-solid'
-          >
-            Update Income
-          </button>
+
+          {data.accountNameId ? (
+            <>
+              <button
+                type='submit'
+                name='_action'
+                value='updateExpenses'
+                className='btn-base btn-outline'
+              >
+                Update Expense
+              </button>
+            </>
+          ): (
+            <>
+                <button
+                  type='submit'
+                  name='_action'
+                  value='updateIncomes'
+                  className='btn-base btn-solid'
+                >
+                  Update Income
+                </button>
+            </>
+          )}
+
+
         </div>
       </Form>
     </>

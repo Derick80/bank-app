@@ -7,7 +7,7 @@ import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { getExpense } from '~/utils/expenses.server'
 export async function loader(args: LoaderArgs) {
   const user = await isAuthenticated(args.request)
-  if (!user) return redirect('/login')
+  if (!user) return redirect('/auth/login')
   const expenseId = args.params.eid
   console.log('expenseId', expenseId)
 
@@ -28,7 +28,7 @@ export default function ExpensesRoute() {
           <h1 className='text-2xl'>Ex</h1>
           <Content
             data={data.expenses}
-            type={'expenses'}
+            type='expenses'
             preview={false}
             showMore
             showEdit

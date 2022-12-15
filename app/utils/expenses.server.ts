@@ -16,7 +16,7 @@ const pickExpense = {
   type: true,
   frequency: true,
   recurring: true,
-  paid: true,
+  include: true,
   userId: true
 }
 
@@ -92,7 +92,7 @@ export const updateExpense = async (input: ExpenseCreate) => {
       type: input.type,
       frequency: input.frequency,
       recurring: input.recurring,
-      paid: input.paid,
+      include: input.include,
       userId: input.userId
     }
   })

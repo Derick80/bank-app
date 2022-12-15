@@ -76,35 +76,52 @@ model Profile {
 model Income {
   id            String    @id @unique @default(uuid())
   description   String
+
   amount        Float
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now())
   due_date      DateTime
-  type          String
-  frequency     String
-  recurring     Boolean   @default(true)
-  paid          Boolean   @default(false)
+  type          String  @default("income")
+   include          Boolean   @default(true)
   user          User      @relation(fields: [userId], references: [id])
   userId        String
-
+  incomeCategories IncomeCategory[]
+createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
 }
 
+
+model IncomeCategory {
+  id String @id @unique @default(uuid())
+  name String @unique
+  value String @unique
+  label String
+  incomes Income[]
+
+}
 
 model Expense {
   id             String     @id @unique @default(uuid())
   description    String
-  accountNameId  String
+
   amount         Float
   due_date       DateTime
-  type          String
-  frequency      String
-  recurring      Boolean    @default(true)
-  paid           Boolean    @default(false)
+  type          String @default("expense")
+   include           Boolean    @default(true)
 
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now())
   user           User[]     @relation
   userId         String
+
+  expenseCategories ExpenseCategory[]
+
+}
+
+model ExpenseCategory {
+  id String @id @unique @default(uuid())
+  name String @unique
+  value String @unique
+  label String
+  expenses Expense[]
 
 }
 
@@ -117,7 +134,7 @@ model DeletedExpense {
   type          String
   frequency     String
   recurring      Boolean    @default(true)
-  paid           Boolean    @default(false)
+  include           Boolean    @default(false)
 
   deletedAt      DateTime   @default(now())
   updatedAt      DateTime   @default(now())

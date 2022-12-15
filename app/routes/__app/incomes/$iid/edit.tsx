@@ -34,7 +34,7 @@ export async function action({ request, params }: LoaderArgs) {
   invariant(frequency, 'Frequency')
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
-  const paid = Boolean(formData.get('paid'))
+  const include = Boolean(formData.get('include'))
   let accountNameId = formData.get('accountNameId') as string
 
   if (
@@ -53,7 +53,7 @@ export async function action({ request, params }: LoaderArgs) {
     type,
     frequency,
     recurring,
-    paid,
+    include,
     incomeId: params.iid
   }
   switch (action) {
@@ -65,7 +65,7 @@ export async function action({ request, params }: LoaderArgs) {
         type: fields.type,
         frequency: fields.frequency,
         recurring: fields.recurring,
-        paid: fields.paid,
+        include: fields.include,
         userId: user.id,
         incomeId: params.iid
       })
@@ -80,7 +80,7 @@ export async function action({ request, params }: LoaderArgs) {
         type: type,
         frequency: frequency,
         recurring: recurring,
-        paid: paid,
+        include: include,
         userId: user.id,
         expenseId: params.iid
       })
@@ -91,7 +91,7 @@ export async function action({ request, params }: LoaderArgs) {
 }
 
 export default function EditIncome() {
-  const data = useLoaderData<typeof loader>() as IncomeQuery
+  const data = useLoaderData<typeof loader>()
 
   return (
     <>

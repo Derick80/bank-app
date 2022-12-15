@@ -2,8 +2,10 @@ import type { Prisma } from '@prisma/client'
 import { prisma } from './prisma.server'
 import type { Income } from '@prisma/client'
 import { dateRange } from './date-functions.server'
+import { format, parseISO } from 'date-fns'
 export type IncomeQuery = Omit<Income, 'createdAt' | 'updatedAt'>
 
+export type IncomeGetOrEdit = Omit<Income, 'createdAt' | 'updatedAt' >
 export type IncomeCreate = Omit<Income, 'createdAt' | 'updatedAt' | 'id'> & {
   userId: string
   incomeId?: string
@@ -17,6 +19,7 @@ const pickIncome = {
   type: true,
   frequency: true,
   recurring: true,
+  include: true,
   userId: true
 }
 export const getUserIncomes = async (userId: string) => {
@@ -28,28 +31,52 @@ export const getUserIncomes = async (userId: string) => {
   })
 }
 
+export async function parseStringDate(dateString:Date): Promise<Date> {
+    const isoDate= new Date(dateString).toISOString()
+    return parseISO(isoDate)
+}
 export const getUserCurrentMonthIncomes = async (
   user: Prisma.UserWhereUniqueInput
 ) => {
-  const { now, then } = dateRange()
-  return await prisma.income.findMany({
+  const { now, then  } = dateRange()
+console.log(now, then);
+
+  const result= await prisma.income.findMany({
     where: {
       userId: user.id,
       due_date: {
-        gte: now,
-        lte: then
+        gte: now.toISOString(),
+        lte: then.toISOString()
       }
     },
     select: pickIncome
   })
-}
+  const results = result.map((income) => {
+    const firstDate = new Date(income.due_date).toISOString()
 
-export const getIncome = async (incomeId: string) => {
-  return await prisma.income.findFirst({
-    where: {
-      id: incomeId
+    return {
+      ...income,
+      due_date: income.due_date ? parseISO(firstDate) : null
     }
   })
+  return results
+}
+
+
+export async function getIncome(input:string):
+Promise<IncomeQuery>
+ {
+  const income = await prisma.income.findUnique({
+    where: {
+      id: input
+    },
+    select: pickIncome
+  })
+
+  if(!income) throw new Error('Income not found')
+  return income
+
+
 }
 
 export const createIncome = async (input: IncomeCreate) => {
@@ -71,10 +98,11 @@ export const updateIncome = async (input: IncomeCreate) => {
     data: {
       description: input.description,
       amount: input.amount,
-      due_date: input.due_date,
+      due_date: (input.due_date).toISOString(),
       type: input.type,
       frequency: input.frequency,
       recurring: input.recurring,
+      include: input.include,
       userId: input.userId
     }
   })

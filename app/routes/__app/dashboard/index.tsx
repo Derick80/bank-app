@@ -1,17 +1,19 @@
-import type { LoaderArgs } from '@remix-run/node'
+import { ActionArgs, FormData, LoaderArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import chroma from 'chroma-js'
 import { BandChart, BandContainer } from '~/components/shared/band-chart'
 import { Content } from '~/components/shared/content'
+import { IncomeTable } from '~/components/shared/income-content'
+
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { dateRange } from '~/utils/date-functions.server'
 import { getUserExpensesByMonth } from '~/utils/expenses.server'
-import { getUserCurrentMonthIncomes } from '~/utils/incomes.server'
+import { getUserCurrentMonthIncomes, IncomeQuery, updateIncome } from '~/utils/incomes.server'
 
 export async function loader(args: LoaderArgs) {
   const user = await isAuthenticated(args.request)
-  if (!user) return redirect('/login')
+  if (!user) return redirect('/auth/login')
   const userId = user.id
   const incomes = await getUserCurrentMonthIncomes({ id: user.id })
   const incomesByTypeTotal = await totalAndGroupByType(incomes)
@@ -40,7 +42,6 @@ export async function loader(args: LoaderArgs) {
     }
   })
 
-  console.log('exMapped', exMapped)
 
   return json({
     exTotal,
@@ -51,6 +52,27 @@ export async function loader(args: LoaderArgs) {
     bills,
     expensesByTypeTotal
   })
+}
+
+export async function action({params,request}:ActionArgs){
+  const user = await isAuthenticated(request)
+  if (!user) return redirect('/auth/login')
+  const userId = user.id
+  const incomeId = params.id
+
+  const formData = await  request.formData()
+  const description = formData.get('description') as string
+  const amount = Number(formData.get('amount'))
+  const type = formData.get('type') as string
+ let due_date = new Date(formData.get('due_date') as string)
+ const frequency = formData.get('frequency') as string
+  const recurring = Boolean(formData.get('recurring'))
+  const include = Boolean(formData.get('include'))
+
+
+  await updateIncome({incomeId: incomeId, description, amount, type, due_date, frequency, recurring, include, userId})
+
+  return redirect('/dashboard')
 }
 
 export default function DashBoardRoute() {
@@ -70,7 +92,12 @@ export default function DashBoardRoute() {
           />
         ))}
       </BandContainer>
-      <div className='flex-r flex w-full justify-around p-2'>band stuff</div>
+      <div className='flex-r flex w-full justify-around p-2'>band stuff
+<IncomeTable
+      incomes={data.incomes}
+      />
+
+      </div>
       <div className='flex-r flex w-full justify-around p-2'>
         <div>
           <div className='flex items-center justify-between'>

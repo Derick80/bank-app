@@ -23,8 +23,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
-  const paid = Boolean(formData.get('paid'))
-  invariant(paid, 'Paid')
+  const include = Boolean(formData.get('include'))
+  invariant(include, 'include')
 
   if (
     typeof description !== 'string' ||
@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     type,
     frequency,
     recurring,
-    paid
+    include
   }
   const income = await createIncome({
     description: fields.description,
@@ -51,7 +51,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     type: fields.type,
     frequency: fields.frequency,
     recurring: fields.recurring,
-    paid: fields.paid,
+    include: fields.include,
     userId: user.id
   })
   return redirect(`/incomes/${income.id}`)
@@ -67,7 +67,7 @@ export default function NewIncome() {
     type: '',
     frequency: '',
     recurring: 'true',
-    paid: 'false',
+    include: 'false',
     description: '',
     userId: user.id
   })
@@ -163,13 +163,13 @@ export default function NewIncome() {
               />
             </label>
             <label>
-              <span>Paid</span>
+              <span>include</span>
               <input
                 type='checkbox'
-                name='paid'
-                value={formData.paid}
-                checked={formData.paid === 'false'}
-                onChange={(e) => handleInputChange(e, 'paid')}
+                name='include'
+                value={formData.include}
+
+                onChange={(e) => handleInputChange(e, 'include')}
               />
             </label>
             <button type='submit'>Submit</button>

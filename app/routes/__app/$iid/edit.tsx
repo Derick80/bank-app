@@ -6,17 +6,18 @@ import { Edit } from '~/components/shared/edit'
 import { Modal } from '~/components/shared/model'
 import { isAuthenticated } from '~/utils/auth/authenticator.server'
 import { updateExpense } from '~/utils/expenses.server'
-import type { IncomeQuery } from '~/utils/incomes.server'
 import { getIncome, updateIncome } from '~/utils/incomes.server'
 
-export async function loader(args: LoaderArgs) {
-  const user = await isAuthenticated(args.request)
+export async function loader({ request, params }: LoaderArgs) {
+  const incomeId = params.iid
+  invariant(incomeId, 'Income ID Required')
+  let incomeProsmie = await getIncome(incomeId)
+  const user = await isAuthenticated(request)
   invariant(user, 'User Required')
-  const idToGet = args.params.iid
-  invariant(idToGet, 'Post ID Required')
-  const income = await getIncome(idToGet)
 
-  return json(income)
+  let [income] = await Promise.all([incomeProsmie])
+  invariant(income, 'Income Required')
+  return json({income})
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -34,7 +35,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(frequency, 'Frequency')
   const recurring = Boolean(formData.get('recurring'))
   invariant(recurring, 'Recurring')
-  const paid = Boolean(formData.get('paid'))
+  const include = Boolean(formData.get('include'))
   let accountNameId = formData.get('accountNameId') as string
 
   if (
@@ -53,7 +54,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     type,
     frequency,
     recurring,
-    paid,
+    include,
     incomeId: params.iid
   }
   switch (action) {
@@ -65,7 +66,7 @@ export const action: ActionFunction = async ({ request, params }) => {
         type: fields.type,
         frequency: fields.frequency,
         recurring: fields.recurring,
-        paid: fields.paid,
+        include: fields.include,
         userId: user.id,
         incomeId: params.iid
       })
@@ -73,14 +74,14 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     case 'updateExpenses':
       await updateExpense({
-        description: description,
+        description: fields.description,
+        amount: fields.amount,
         accountNameId: accountNameId,
-        amount: amount,
-        due_date: due_date,
-        type: type,
-        frequency: frequency,
-        recurring: recurring,
-        paid: paid,
+        due_date: fields.due_date,
+        type: fields.type,
+        frequency: fields.frequency,
+        recurring: fields.recurring,
+        include: fields.include,
         userId: user.id,
         expenseId: params.iid
       })
@@ -91,12 +92,14 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 export default function EditIncome() {
-  const data = useLoaderData<typeof loader>() as IncomeQuery
+  const data = useLoaderData<typeof loader>()
 
   return (
     <>
       <Modal isOpen={true} className='w-2/3 p-10'>
-        <Edit data={data} type='incomes' />
+        <Edit data={data}
+
+        />
       </Modal>
     </>
   )
